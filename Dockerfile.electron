@@ -1,0 +1,31 @@
+FROM node:14
+
+# Install dependencies for Wine and other required packages
+RUN apt-get update \
+    && apt-get install -y software-properties-common \
+    && dpkg --add-architecture i386 \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+    wine64 \
+    wine32 \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and install dependencies
+COPY package.json yarn.lock ./
+RUN yarn install
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the frontend
+RUN yarn build
+
+# Package the application
+RUN yarn electron-pack
+
+# The entrypoint for the container
+ENTRYPOINT ['/bin/bash']

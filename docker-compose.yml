@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    image: node:14
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: bash -c 'cd backend && npm install && npm start'
+    ports:
+      - '5000:5000'
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/mern-project
+      - JWT_SECRET=your_jwt_secret
+    depends_on:
+      - mongo
+
+  frontend:
+    image: node:14
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    command: bash -c 'npm install && npm start'
+    ports:
+      - '3000:3000'
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
