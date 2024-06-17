@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ProfilePreferencesContext } from '../contexts/ProfilePreferencesContext';
+import { ProfilePreferencesContext } from '../../contexts/ProfilePreferencesContexttext';
 import { Slider, Typography } from '@material-ui/core';
 
 const Profile = () => {
