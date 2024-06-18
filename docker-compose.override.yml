@@ -1,21 +1,9 @@
 version: '3.8'
 
 services:
-  backend:
-    build: ./backend
-    volumes:
-      - ./backend:/usr/src/app
-    ports:
-      - "5000:5000"
+  web:
     environment:
-      - MONGO_URI=mongodb://mongo:27017/mern-project
-      - JWT_SECRET=your_jwt_secret
-    depends_on:
-      - mongo
-
-  frontend:
-    build: .
-    volumes:
-      - .:/usr/src/app
-    ports:
-      - "3000:3000"
+      - NODE_ENV=development
+  electron:
+    environment:
+      - NODE_ENV=development

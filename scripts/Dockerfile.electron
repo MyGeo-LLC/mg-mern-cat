@@ -8,10 +8,6 @@ RUN npm install
 
 COPY . .
 
-# Set the environment variable to use legacy OpenSSL providers
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
 RUN npm run build
 
 CMD ["npm", "run", "electron"]
-
