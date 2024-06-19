@@ -1,16 +1,15 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+const API = axios.create({ baseURL: '/api' });
+
+API.interceptors.request.use((req) => {
+  if (localStorage.getItem('profile')) {
+    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
+  }
+  return req;
 });
 
-export const login = (credentials) => api.post('/api/auth/login', credentials);
-export const logout = () => api.post('/api/auth/logout');
-export const resetPassword = (email) => api.post('/api/auth/reset-password', { email });
-
-export const getUsers = () => api.get('/api/users');
-export const addUser = (user) => api.post('/api/users', user);
-export const modifyUser = (id, user) => api.put(`/api/users/${id}`, user);
-export const deleteUser = (id) => api.delete(`/api/users/${id}`);
-
-export default api;
+export const fetchProfile = () => API.get('/users/profile');
+export const updateProfile = (profileData) => API.put('/users/profile', profileData);
+export const login = (formData) => API.post('/auth/login', formData);
+export const register = (formData) => API.post('/auth/register', formData);

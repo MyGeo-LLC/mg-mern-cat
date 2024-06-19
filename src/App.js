@@ -1,36 +1,44 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import Profile from './components/Profile';
-import Login from './pages/Login';
-import AdminPanel from './admin/AdminPanel';
+import { Route, Routes } from 'react-router-dom';
 
-import { AuthProvider } from './contexts/AuthContext';
-import { PermissionsProvider } from './contexts/PermissionsContext';
-import { ShortcutsProvider } from './contexts/ShortcutsContext';
-import { MessagesProvider } from './contexts/MessagesContext';
-import { ProfilePreferencesProvider } from './contexts/ProfilePreferencesContext';
+import AdminPanel from './components/AdminPanel';
+import AuthContextProvider from './contexts/AuthContext';
+import Dashboard from './components/Dashboard';
+import DraggableRadioHead from './components/DraggableRadioHead';
+import DraggableWidget from './components/DraggableWidget';
+import Login from './pages/Login';
+import MessagesContextProvider from './contexts/MessagesContext';
+import PermissionsContextProvider from './contexts/PermissionsContext';
+import Profile from './components/Profile';
+import ProfilePreferencesContextProvider from './contexts/ProfilePreferencesContext';
+import { Provider } from 'react-redux';
+import React from 'react';
+import ShortcutsContextProvider from './contexts/ShortcutsContext';
+import UserProfile from './components/UserProfile';
+import store from './redux/store';
 
 const App = () => {
   return (
-    <AuthProvider>
-      <PermissionsProvider>
-        <ShortcutsProvider>
-          <MessagesProvider>
-            <ProfilePreferencesProvider>
-              <Router>
-                <Switch>
-                  <Route path="/login" component={Login} />
-                  <Route path="/admin" component={AdminPanel} />
-                  <Route path="/profile" component={Profile} />
-                  <Route path="/" component={Dashboard} />
-                </Switch>
-              </Router>
-            </ProfilePreferencesProvider>
-          </MessagesProvider>
-        </ShortcutsProvider>
-      </PermissionsProvider>
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthContextProvider>
+        <MessagesContextProvider>
+          <PermissionsContextProvider>
+            <ProfilePreferencesContextProvider>
+              <ShortcutsContextProvider>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/admin" element={<AdminPanel />} />
+                  <Route path="/profile" element={<UserProfile />} />
+                  <Route path="/profile-settings" element={<Profile />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/radiohead/:id" element={<DraggableRadioHead />} />
+                  <Route path="/widget/:id" element={<DraggableWidget />} />
+                </Routes>
+              </ShortcutsContextProvider>
+            </ProfilePreferencesContextProvider>
+          </PermissionsContextProvider>
+        </MessagesContextProvider>
+      </AuthContextProvider>
+    </Provider>
   );
 };
 

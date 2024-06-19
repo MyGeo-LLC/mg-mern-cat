@@ -1,0 +1,21 @@
+.widget {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s;
+  }
+  
+  .widget:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .widget h3 {
+    margin-top: 0;
+  }
+  
+  .widget p {
+    margin-bottom: 0;
+  }
+  

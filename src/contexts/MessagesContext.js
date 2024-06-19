@@ -1,23 +1,15 @@
 import React, { createContext, useState } from 'react';
 
-const MessagesContext = createContext();
+export const MessagesContext = createContext();
 
-const MessagesProvider = ({ children }) => {
+const MessagesContextProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
 
-  const addMessage = (message) => {
-    setMessages([...messages, message]);
-  };
-
-  const removeMessage = (index) => {
-    setMessages(messages.filter((_, i) => i !== index));
-  };
-
   return (
-    <MessagesContext.Provider value={{ messages, addMessage, removeMessage }}>
+    <MessagesContext.Provider value={{ messages, setMessages }}>
       {children}
     </MessagesContext.Provider>
   );
 };
 
-export { MessagesContext, MessagesProvider };
+export default MessagesContextProvider;

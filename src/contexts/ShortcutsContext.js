@@ -1,28 +1,15 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
-const ShortcutsContext = createContext();
+export const ShortcutsContext = createContext();
 
-const ShortcutsProvider = ({ children }) => {
-  const [shortcuts, setShortcuts] = useState({});
-
-  const updateShortcut = (action, key) => {
-    setShortcuts({ ...shortcuts, [action]: key });
-  };
-
-  useEffect(() => {
-    const storedShortcuts = JSON.parse(localStorage.getItem('shortcuts'));
-    if (storedShortcuts) setShortcuts(storedShortcuts);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
-  }, [shortcuts]);
+const ShortcutsContextProvider = ({ children }) => {
+  const [shortcuts, setShortcuts] = useState([]);
 
   return (
-    <ShortcutsContext.Provider value={{ shortcuts, updateShortcut }}>
+    <ShortcutsContext.Provider value={{ shortcuts, setShortcuts }}>
       {children}
     </ShortcutsContext.Provider>
   );
 };
 
-export { ShortcutsContext, ShortcutsProvider };
+export default ShortcutsContextProvider;

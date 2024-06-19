@@ -2,9 +2,9 @@ import React, { createContext, useState } from 'react';
 
 export const ProfilePreferencesContext = createContext();
 
-export const ProfilePreferencesProvider = ({ children }) => {
+const ProfilePreferencesContextProvider = ({ children }) => {
   const [preferences, setPreferences] = useState({
-    dpi: 96,
+    dpi: 150,
     resolution: { width: 1920, height: 1080 },
   });
 
@@ -14,3 +14,5 @@ export const ProfilePreferencesProvider = ({ children }) => {
     </ProfilePreferencesContext.Provider>
   );
 };
+
+export default ProfilePreferencesContextProvider;

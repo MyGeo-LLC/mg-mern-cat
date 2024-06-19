@@ -1,0 +1,21 @@
+.radiohead {
+    background-color: #e0e0e0;
+    border: 1px solid #b0b0b0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+  }
+  
+  .radiohead:hover {
+    background-color: #d0d0d0;
+  }
+  
+  .radiohead h3 {
+    margin-top: 0;
+  }
+  
+  .radiohead .MuiSlider-root {
+    margin: 10px 0;
+  }
+  

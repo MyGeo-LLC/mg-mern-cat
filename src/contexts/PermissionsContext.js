@@ -1,28 +1,15 @@
-import React, { createContext, useState, useEffect } from 'react';
-import api from '../api/api';
+import React, { createContext, useState } from 'react';
 
-const PermissionsContext = createContext();
+export const PermissionsContext = createContext();
 
-const PermissionsProvider = ({ children }) => {
+const PermissionsContextProvider = ({ children }) => {
   const [permissions, setPermissions] = useState([]);
 
-  useEffect(() => {
-    const fetchPermissions = async () => {
-      try {
-        const response = await api.getPermissions();
-        setPermissions(response.data);
-      } catch (error) {
-        console.error('Failed to fetch permissions', error);
-      }
-    };
-    fetchPermissions();
-  }, []);
-
   return (
-    <PermissionsContext.Provider value={{ permissions }}>
+    <PermissionsContext.Provider value={{ permissions, setPermissions }}>
       {children}
     </PermissionsContext.Provider>
   );
 };
 
-export { PermissionsContext, PermissionsProvider };
+export default PermissionsContextProvider;

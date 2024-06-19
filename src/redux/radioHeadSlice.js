@@ -1,7 +1,6 @@
-
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = JSON.parse(localStorage.getItem('radioHeads')) || Array.from({ length: 40 }, (_, id) => ({
+const initialState = Array.from({ length: 2 }, (_, id) => ({
   id: id.toString(),
   incomingVolume: 50,
   outgoingVolume: 50,
@@ -17,7 +16,7 @@ const radioHeadsSlice = createSlice({
       const { id, type, value } = action.payload;
       const radioHead = state.find(head => head.id === id);
       if (radioHead) {
-        radioHead[] = value;
+        radioHead[`${type}Volume`] = value;
       }
     },
     toggleMute: (state, action) => {
@@ -27,13 +26,9 @@ const radioHeadsSlice = createSlice({
         radioHead.isMuted = !radioHead.isMuted;
       }
     },
-    saveSettings: (state) => {
-      localStorage.setItem('radioHeads', JSON.stringify(state));
-    },
   },
 });
 
-export const { setVolume, toggleMute, saveSettings } = radioHeadsSlice.actions;
+export const { setVolume, toggleMute } = radioHeadsSlice.actions;
 
 export default radioHeadsSlice.reducer;
-  

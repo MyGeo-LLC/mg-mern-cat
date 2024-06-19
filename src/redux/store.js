@@ -7,9 +7,4 @@ const store = configureStore({
   },
 });
 
-store.subscribe(() => {
-  const { saveSettings } = require('./radioHeadSlice').default.actions;
-  store.dispatch(saveSettings());
-});
-
 export default store;

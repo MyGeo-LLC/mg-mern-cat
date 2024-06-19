@@ -1,6 +1,9 @@
-import React, { useState, useContext } from 'react';
+import './Login.css';
+
+import { Button, Container, TextField, Typography } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
+
 import { AuthContext } from '../contexts/AuthContext';
-import { Container, TextField, Button, Typography } from '@material-ui/core';
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -13,7 +16,7 @@ function Login() {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="xs" className="container">
       <Typography variant="h4" component="h1" gutterBottom>Login</Typography>
       <form onSubmit={handleSubmit}>
         <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />

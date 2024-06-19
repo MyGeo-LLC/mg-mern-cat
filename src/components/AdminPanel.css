@@ -1,0 +1,21 @@
+.admin-panel {
+    padding: 20px;
+    background-color: #282c34;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+  }
+  
+  .admin-panel:hover {
+    transform: translateY(-5px);
+  }
+  
+  .admin-panel h1 {
+    font-size: 24px;
+  }
+  
+  .admin-panel p {
+    font-size: 18px;
+  }
+  

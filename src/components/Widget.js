@@ -1,13 +1,12 @@
 import React from 'react';
-import { Paper, Typography } from '@material-ui/core';
 
-function Widget() {
+const Widget = ({ id }) => {
   return (
-    <Paper>
-      <Typography variant="h6">Widget</Typography>
-      {/* Widget content */}
-    </Paper>
+    <div>
+      <h3>Widget {id}</h3>
+      {/* Add your widget content here */}
+    </div>
   );
-}
+};
 
 export default Widget;

@@ -1,0 +1,2400 @@
+
+
+--- ./src/App.js ---
+
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
+import Login from './pages/Login';
+import AdminPanel from './admin/AdminPanel';
+
+import { AuthProvider } from './contexts/AuthContext';
+import { PermissionsProvider } from './contexts/PermissionsContext';
+import { ShortcutsProvider } from './contexts/ShortcutsContext';
+import { MessagesProvider } from './contexts/MessagesContext';
+import { ProfilePreferencesProvider } from './contexts/ProfilePreferencesContext';
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <PermissionsProvider>
+        <ShortcutsProvider>
+          <MessagesProvider>
+            <ProfilePreferencesProvider>
+              <Router>
+                <Switch>
+                  <Route path="/login" component={Login} />
+                  <Route path="/admin" component={AdminPanel} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/" component={Dashboard} />
+                </Switch>
+              </Router>
+            </ProfilePreferencesProvider>
+          </MessagesProvider>
+        </ShortcutsProvider>
+      </PermissionsProvider>
+    </AuthProvider>
+  );
+};
+
+export default App;
+
+
+--- ./src/api/api.js ---
+
+
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+});
+
+export const login = (credentials) => api.post('/api/auth/login', credentials);
+export const logout = () => api.post('/api/auth/logout');
+export const resetPassword = (email) => api.post('/api/auth/reset-password', { email });
+
+export const getUsers = () => api.get('/api/users');
+export const addUser = (user) => api.post('/api/users', user);
+export const modifyUser = (id, user) => api.put(`/api/users/${id}`, user);
+export const deleteUser = (id) => api.delete(`/api/users/${id}`);
+
+export default api;
+
+
+--- ./src/index.js ---
+
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import './App.css'; // Import your CSS
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+
+--- ./src/admin/AdminPanel.js ---
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const AdminPanel = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/users')
+      .then(response => setUsers(response.data))
+      .catch(error => console.error('Error fetching users:', error));
+  }, []);
+
+  const handleAddUser = () => {
+    // Add user logic
+  };
+
+  const handleModifyUser = (id) => {
+    // Modify user logic
+  };
+
+  const handleDeleteUser = (id) => {
+    // Delete user logic
+  };
+
+  return (
+    <div>
+      <h1>Admin Panel</h1>
+      <button onClick={handleAddUser}>Add User</button>
+      <ul>
+        {users.map(user => (
+          <li key={user._id}>
+            {user.name} - {user.role}
+            <button onClick={() => handleModifyUser(user._id)}>Modify</button>
+            <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default AdminPanel;
+
+
+--- ./src/components/Profile.js ---
+
+
+import React, { useContext } from 'react';
+import { ProfilePreferencesContext } from '../contexts/ProfilePreferencesContext';
+import { Slider, Typography } from '@material-ui/core';
+
+const Profile = () => {
+  const { preferences, setPreferences } = useContext(ProfilePreferencesContext);
+
+  const handleDpiChange = (event, newValue) => {
+    setPreferences(prev => ({ ...prev, dpi: newValue }));
+  };
+
+  const handleResolutionChange = (event, type) => {
+    const value = event.target.value;
+    setPreferences(prev => ({
+      ...prev,
+      resolution: { ...prev.resolution, [type]: value },
+    }));
+  };
+
+  return (
+    <div>
+      <Typography variant="h4">Profile Settings</Typography>
+      <Typography>DPI</Typography>
+      <Slider
+        value={preferences.dpi}
+        onChange={handleDpiChange}
+        min={50}
+        max={300}
+        aria-labelledby="dpi-slider"
+      />
+      <Typography>Resolution</Typography>
+      <input
+        type="number"
+        value={preferences.resolution.width}
+        onChange={(e) => handleResolutionChange(e, 'width')}
+        placeholder="Width"
+      />
+      <input
+        type="number"
+        value={preferences.resolution.height}
+        onChange={(e) => handleResolutionChange(e, 'height')}
+        placeholder="Height"
+      />
+    </div>
+  );
+};
+
+export default Profile;
+
+
+--- ./src/components/RadioHead.js ---
+
+
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setVolume, toggleMute } from '../redux/radioheadSlice';
+import { Button, Slider } from '@mui/material';
+
+const RadioHead = ({ id }) => {
+  const dispatch = useDispatch();
+  const radioHead = useSelector((state) => state.radioHeads.find((head) => head.id === id));
+
+  if (!radioHead) {
+    return null;
+  }
+
+  const handleVolumeChange = (type, value) => {
+    dispatch(setVolume({ id, type, value }));
+  };
+
+  const handleToggleMute = () => {
+    dispatch(toggleMute(id));
+  };
+
+  return (
+    <div>
+      <h3>RadioHead {id}</h3>
+      <Slider
+        value={radioHead.incomingVolume}
+        onChange={(e, value) => handleVolumeChange('incoming', value)}
+        aria-labelledby="incoming-volume-slider"
+      />
+      <Slider
+        value={radioHead.outgoingVolume}
+        onChange={(e, value) => handleVolumeChange('outgoing', value)}
+        aria-labelledby="outgoing-volume-slider"
+      />
+      <Slider
+        value={radioHead.masterVolume}
+        onChange={(e, value) => handleVolumeChange('master', value)}
+        aria-labelledby="master-volume-slider"
+      />
+      <Button onClick={handleToggleMute}>
+        {radioHead.isMuted ? 'Unmute' : 'Mute'}
+      </Button>
+    </div>
+  );
+};
+
+export default RadioHead;
+
+
+--- ./src/components/Widget.js ---
+
+
+import React from 'react';
+import { Paper, Typography } from '@material-ui/core';
+
+function Widget() {
+  return (
+    <Paper>
+      <Typography variant="h6">Widget</Typography>
+      {/* Widget content */}
+    </Paper>
+  );
+}
+
+export default Widget;
+
+
+--- ./src/components/Dashboard.js ---
+
+
+import React from 'react';
+import GridLayout from 'react-grid-layout';
+import RadioHead from './RadioHead';
+import { useSelector } from 'react-redux';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+const Dashboard = () => {
+  const radioHeads = useSelector(state => state.radioHeads);
+
+  const layout = radioHeads.map((head, index) => ({
+    i: head.id,
+    x: (index % 6) * 2,
+    y: Math.floor(index / 6) * 2,
+    w: 2,
+    h: 2,
+    isResizable: true,
+    isDraggable: true,
+  }));
+
+  return (
+    <div style={{ height: '100vh', width: '100vw' }}>
+      <GridLayout
+        className="layout"
+        layout={layout}
+        cols={12}
+        rowHeight={30}
+        width={1200}
+      >
+        {radioHeads.map(head => (
+          <div key={head.id}>
+            <RadioHead {...head} />
+          </div>
+        ))}
+      </GridLayout>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+
+--- ./src/utils/logger.js ---
+
+
+export const logPerformance = (metric) => {
+  console.log('Performance metric:', metric);
+};
+
+export const logError = (error) => {
+  console.error('Error:', error);
+};
+
+
+--- ./src/contexts/PermissionsContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+import api from '../api/api';
+
+const PermissionsContext = createContext();
+
+const PermissionsProvider = ({ children }) => {
+  const [permissions, setPermissions] = useState([]);
+
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const response = await api.getPermissions();
+        setPermissions(response.data);
+      } catch (error) {
+        console.error('Failed to fetch permissions', error);
+      }
+    };
+    fetchPermissions();
+  }, []);
+
+  return (
+    <PermissionsContext.Provider value={{ permissions }}>
+      {children}
+    </PermissionsContext.Provider>
+  );
+};
+
+export { PermissionsContext, PermissionsProvider };
+
+
+--- ./src/contexts/MessagesContext.js ---
+
+
+import React, { createContext, useState } from 'react';
+
+const MessagesContext = createContext();
+
+const MessagesProvider = ({ children }) => {
+  const [messages, setMessages] = useState([]);
+
+  const addMessage = (message) => {
+    setMessages([...messages, message]);
+  };
+
+  const removeMessage = (index) => {
+    setMessages(messages.filter((_, i) => i !== index));
+  };
+
+  return (
+    <MessagesContext.Provider value={{ messages, addMessage, removeMessage }}>
+      {children}
+    </MessagesContext.Provider>
+  );
+};
+
+export { MessagesContext, MessagesProvider };
+
+
+--- ./src/contexts/AuthContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import api from '../api/api';
+
+const AuthContext = createContext();
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const history = useHistory();
+
+  const login = async (email, password) => {
+    try {
+      const response = await api.login(email, password);
+      setUser(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      history.push('/');
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    history.push('/login');
+  };
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) setUser(storedUser);
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export { AuthContext, AuthProvider };
+
+
+--- ./src/contexts/ProfilePreferencesContext.js ---
+
+
+import React, { createContext, useState } from 'react';
+
+export const ProfilePreferencesContext = createContext();
+
+export const ProfilePreferencesProvider = ({ children }) => {
+  const [preferences, setPreferences] = useState({
+    dpi: 96,
+    resolution: { width: 1920, height: 1080 },
+  });
+
+  return (
+    <ProfilePreferencesContext.Provider value={{ preferences, setPreferences }}>
+      {children}
+    </ProfilePreferencesContext.Provider>
+  );
+};
+
+
+--- ./src/contexts/ShortcutsContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+
+const ShortcutsContext = createContext();
+
+const ShortcutsProvider = ({ children }) => {
+  const [shortcuts, setShortcuts] = useState({});
+
+  const updateShortcut = (action, key) => {
+    setShortcuts({ ...shortcuts, [action]: key });
+  };
+
+  useEffect(() => {
+    const storedShortcuts = JSON.parse(localStorage.getItem('shortcuts'));
+    if (storedShortcuts) setShortcuts(storedShortcuts);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+  }, [shortcuts]);
+
+  return (
+    <ShortcutsContext.Provider value={{ shortcuts, updateShortcut }}>
+      {children}
+    </ShortcutsContext.Provider>
+  );
+};
+
+export { ShortcutsContext, ShortcutsProvider };
+
+
+--- ./src/redux/radioHeadSlice.js ---
+
+
+
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = JSON.parse(localStorage.getItem('radioHeads')) || Array.from({ length: 40 }, (_, id) => ({
+  id: id.toString(),
+  incomingVolume: 50,
+  outgoingVolume: 50,
+  masterVolume: 50,
+  isMuted: false,
+}));
+
+const radioHeadsSlice = createSlice({
+  name: 'radioHeads',
+  initialState,
+  reducers: {
+    setVolume: (state, action) => {
+      const { id, type, value } = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead[] = value;
+      }
+    },
+    toggleMute: (state, action) => {
+      const id = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead.isMuted = !radioHead.isMuted;
+      }
+    },
+    saveSettings: (state) => {
+      localStorage.setItem('radioHeads', JSON.stringify(state));
+    },
+  },
+});
+
+export const { setVolume, toggleMute, saveSettings } = radioHeadsSlice.actions;
+
+export default radioHeadsSlice.reducer;
+  
+
+
+--- ./src/redux/store.js ---
+
+
+import { configureStore } from '@reduxjs/toolkit';
+import radioHeadsReducer from './radioHeadSlice';
+
+const store = configureStore({
+  reducer: {
+    radioHeads: radioHeadsReducer,
+  },
+});
+
+store.subscribe(() => {
+  const { saveSettings } = require('./radioHeadSlice').default.actions;
+  store.dispatch(saveSettings());
+});
+
+export default store;
+
+
+--- ./src/redux/radioheadSlice.js ---
+
+
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = JSON.parse(localStorage.getItem('radioHeads')) || Array.from({ length: 40 }, (_, id) => ({
+  id: id.toString(),
+  incomingVolume: 50,
+  outgoingVolume: 50,
+  masterVolume: 50,
+  isMuted: false,
+}));
+
+const radioHeadsSlice = createSlice({
+  name: 'radioHeads',
+  initialState,
+  reducers: {
+    setVolume: (state, action) => {
+      const { id, type, value } = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead[`${type}Volume`] = value;
+      }
+    },
+    toggleMute: (state, action) => {
+      const id = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead.isMuted = !radioHead.isMuted;
+      }
+    },
+    saveSettings: (state) => {
+      localStorage.setItem('radioHeads', JSON.stringify(state));
+    },
+  },
+});
+
+export const { setVolume, toggleMute, saveSettings } = radioHeadsSlice.actions;
+
+export default radioHeadsSlice.reducer;
+
+
+--- ./src/theme/theme.js ---
+
+
+import { createTheme } from '@material-ui/core/styles';
+
+export const lightTheme = createTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#6200ea',
+    },
+    secondary: {
+      main: '#03dac6',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+});
+
+export const darkTheme = createTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#bb86fc',
+    },
+    secondary: {
+      main: '#03dac6',
+    },
+    background: {
+      default: '#121212',
+    },
+  },
+});
+
+
+--- ./src/pages/Login.js ---
+
+
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { Container, TextField, Button, Typography } from '@material-ui/core';
+
+function Login() {
+  const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(email, password);
+  };
+
+  return (
+    <Container maxWidth="xs">
+      <Typography variant="h4" component="h1" gutterBottom>Login</Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <TextField label="Password" type="password" fullWidth margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button type="submit" variant="contained" color="primary" fullWidth>Login</Button>
+      </form>
+    </Container>
+  );
+}
+
+export default Login;
+
+
+--- backend/models/User.js ---
+
+
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+}, { timestamps: true });
+
+const User = mongoose.model('User', userSchema);
+
+export default User;
+
+
+--- backend/server.js ---
+
+
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+
+--- backend/routes/userRoutes.js ---
+
+
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
+
+const router = express.Router();
+
+router.use(authMiddleware);
+
+router.get('/', async (req, res) => {
+  const users = await User.find();
+  res.send(users);
+});
+
+router.post('/', async (req, res) => {
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password: await bcrypt.hash(password, 10), role });
+  await user.save();
+  res.send(user);
+});
+
+router.put('/:id', async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.send(user);
+});
+
+router.delete('/:id', async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.send('User deleted');
+});
+
+export default router;
+
+
+--- backend/routes/authRoutes.js ---
+
+
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+
+const router = express.Router();
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).send('Email or password is wrong');
+
+  const validPass = await bcrypt.compare(password, user.password);
+  if (!validPass) return res.status(400).send('Invalid password');
+
+  const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET);
+  res.header('Authorization', token).send(token);
+});
+
+router.post('/logout', (req, res) => {
+  res.send('Logout successful');
+});
+
+router.post('/reset-password', async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).send('User not found');
+  // Reset password logic
+  res.send('Password reset email sent');
+});
+
+export default router;
+
+
+--- backend/middleware/authMiddleware.js ---
+
+
+import jwt from 'jsonwebtoken';
+
+export const authMiddleware = (req, res, next) => {
+  const token = req.header('Authorization').replace('Bearer ', '');
+  if (!token) return res.status(401).send('Access Denied');
+
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
+    next();
+  } catch (error) {
+    res.status(400).send('Invalid Token');
+  }
+};
+
+
+--- src/App.js ---
+
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
+import Login from './pages/Login';
+import AdminPanel from './admin/AdminPanel';
+
+import { AuthProvider } from './contexts/AuthContext';
+import { PermissionsProvider } from './contexts/PermissionsContext';
+import { ShortcutsProvider } from './contexts/ShortcutsContext';
+import { MessagesProvider } from './contexts/MessagesContext';
+import { ProfilePreferencesProvider } from './contexts/ProfilePreferencesContext';
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <PermissionsProvider>
+        <ShortcutsProvider>
+          <MessagesProvider>
+            <ProfilePreferencesProvider>
+              <Router>
+                <Switch>
+                  <Route path="/login" component={Login} />
+                  <Route path="/admin" component={AdminPanel} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/" component={Dashboard} />
+                </Switch>
+              </Router>
+            </ProfilePreferencesProvider>
+          </MessagesProvider>
+        </ShortcutsProvider>
+      </PermissionsProvider>
+    </AuthProvider>
+  );
+};
+
+export default App;
+
+
+--- src/api/api.js ---
+
+
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+});
+
+export const login = (credentials) => api.post('/api/auth/login', credentials);
+export const logout = () => api.post('/api/auth/logout');
+export const resetPassword = (email) => api.post('/api/auth/reset-password', { email });
+
+export const getUsers = () => api.get('/api/users');
+export const addUser = (user) => api.post('/api/users', user);
+export const modifyUser = (id, user) => api.put(`/api/users/${id}`, user);
+export const deleteUser = (id) => api.delete(`/api/users/${id}`);
+
+export default api;
+
+
+--- src/index.js ---
+
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import './App.css'; // Import your CSS
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+
+--- src/admin/AdminPanel.js ---
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const AdminPanel = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/users')
+      .then(response => setUsers(response.data))
+      .catch(error => console.error('Error fetching users:', error));
+  }, []);
+
+  const handleAddUser = () => {
+    // Add user logic
+  };
+
+  const handleModifyUser = (id) => {
+    // Modify user logic
+  };
+
+  const handleDeleteUser = (id) => {
+    // Delete user logic
+  };
+
+  return (
+    <div>
+      <h1>Admin Panel</h1>
+      <button onClick={handleAddUser}>Add User</button>
+      <ul>
+        {users.map(user => (
+          <li key={user._id}>
+            {user.name} - {user.role}
+            <button onClick={() => handleModifyUser(user._id)}>Modify</button>
+            <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default AdminPanel;
+
+
+--- src/components/Profile.js ---
+
+
+import React, { useContext } from 'react';
+import { ProfilePreferencesContext } from '../contexts/ProfilePreferencesContext';
+import { Slider, Typography } from '@material-ui/core';
+
+const Profile = () => {
+  const { preferences, setPreferences } = useContext(ProfilePreferencesContext);
+
+  const handleDpiChange = (event, newValue) => {
+    setPreferences(prev => ({ ...prev, dpi: newValue }));
+  };
+
+  const handleResolutionChange = (event, type) => {
+    const value = event.target.value;
+    setPreferences(prev => ({
+      ...prev,
+      resolution: { ...prev.resolution, [type]: value },
+    }));
+  };
+
+  return (
+    <div>
+      <Typography variant="h4">Profile Settings</Typography>
+      <Typography>DPI</Typography>
+      <Slider
+        value={preferences.dpi}
+        onChange={handleDpiChange}
+        min={50}
+        max={300}
+        aria-labelledby="dpi-slider"
+      />
+      <Typography>Resolution</Typography>
+      <input
+        type="number"
+        value={preferences.resolution.width}
+        onChange={(e) => handleResolutionChange(e, 'width')}
+        placeholder="Width"
+      />
+      <input
+        type="number"
+        value={preferences.resolution.height}
+        onChange={(e) => handleResolutionChange(e, 'height')}
+        placeholder="Height"
+      />
+    </div>
+  );
+};
+
+export default Profile;
+
+
+--- src/components/RadioHead.js ---
+
+
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setVolume, toggleMute } from '../redux/radioheadSlice';
+import { Button, Slider } from '@mui/material';
+
+const RadioHead = ({ id }) => {
+  const dispatch = useDispatch();
+  const radioHead = useSelector((state) => state.radioHeads.find((head) => head.id === id));
+
+  if (!radioHead) {
+    return null;
+  }
+
+  const handleVolumeChange = (type, value) => {
+    dispatch(setVolume({ id, type, value }));
+  };
+
+  const handleToggleMute = () => {
+    dispatch(toggleMute(id));
+  };
+
+  return (
+    <div>
+      <h3>RadioHead {id}</h3>
+      <Slider
+        value={radioHead.incomingVolume}
+        onChange={(e, value) => handleVolumeChange('incoming', value)}
+        aria-labelledby="incoming-volume-slider"
+      />
+      <Slider
+        value={radioHead.outgoingVolume}
+        onChange={(e, value) => handleVolumeChange('outgoing', value)}
+        aria-labelledby="outgoing-volume-slider"
+      />
+      <Slider
+        value={radioHead.masterVolume}
+        onChange={(e, value) => handleVolumeChange('master', value)}
+        aria-labelledby="master-volume-slider"
+      />
+      <Button onClick={handleToggleMute}>
+        {radioHead.isMuted ? 'Unmute' : 'Mute'}
+      </Button>
+    </div>
+  );
+};
+
+export default RadioHead;
+
+
+--- src/components/Widget.js ---
+
+
+import React from 'react';
+import { Paper, Typography } from '@material-ui/core';
+
+function Widget() {
+  return (
+    <Paper>
+      <Typography variant="h6">Widget</Typography>
+      {/* Widget content */}
+    </Paper>
+  );
+}
+
+export default Widget;
+
+
+--- src/components/Dashboard.js ---
+
+
+import React from 'react';
+import GridLayout from 'react-grid-layout';
+import RadioHead from './RadioHead';
+import { useSelector } from 'react-redux';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+const Dashboard = () => {
+  const radioHeads = useSelector(state => state.radioHeads);
+
+  const layout = radioHeads.map((head, index) => ({
+    i: head.id,
+    x: (index % 6) * 2,
+    y: Math.floor(index / 6) * 2,
+    w: 2,
+    h: 2,
+    isResizable: true,
+    isDraggable: true,
+  }));
+
+  return (
+    <div style={{ height: '100vh', width: '100vw' }}>
+      <GridLayout
+        className="layout"
+        layout={layout}
+        cols={12}
+        rowHeight={30}
+        width={1200}
+      >
+        {radioHeads.map(head => (
+          <div key={head.id}>
+            <RadioHead {...head} />
+          </div>
+        ))}
+      </GridLayout>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+
+--- src/utils/logger.js ---
+
+
+export const logPerformance = (metric) => {
+  console.log('Performance metric:', metric);
+};
+
+export const logError = (error) => {
+  console.error('Error:', error);
+};
+
+
+--- src/contexts/PermissionsContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+import api from '../api/api';
+
+const PermissionsContext = createContext();
+
+const PermissionsProvider = ({ children }) => {
+  const [permissions, setPermissions] = useState([]);
+
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const response = await api.getPermissions();
+        setPermissions(response.data);
+      } catch (error) {
+        console.error('Failed to fetch permissions', error);
+      }
+    };
+    fetchPermissions();
+  }, []);
+
+  return (
+    <PermissionsContext.Provider value={{ permissions }}>
+      {children}
+    </PermissionsContext.Provider>
+  );
+};
+
+export { PermissionsContext, PermissionsProvider };
+
+
+--- src/contexts/MessagesContext.js ---
+
+
+import React, { createContext, useState } from 'react';
+
+const MessagesContext = createContext();
+
+const MessagesProvider = ({ children }) => {
+  const [messages, setMessages] = useState([]);
+
+  const addMessage = (message) => {
+    setMessages([...messages, message]);
+  };
+
+  const removeMessage = (index) => {
+    setMessages(messages.filter((_, i) => i !== index));
+  };
+
+  return (
+    <MessagesContext.Provider value={{ messages, addMessage, removeMessage }}>
+      {children}
+    </MessagesContext.Provider>
+  );
+};
+
+export { MessagesContext, MessagesProvider };
+
+
+--- src/contexts/AuthContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import api from '../api/api';
+
+const AuthContext = createContext();
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const history = useHistory();
+
+  const login = async (email, password) => {
+    try {
+      const response = await api.login(email, password);
+      setUser(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      history.push('/');
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    history.push('/login');
+  };
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) setUser(storedUser);
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export { AuthContext, AuthProvider };
+
+
+--- src/contexts/ProfilePreferencesContext.js ---
+
+
+import React, { createContext, useState } from 'react';
+
+export const ProfilePreferencesContext = createContext();
+
+export const ProfilePreferencesProvider = ({ children }) => {
+  const [preferences, setPreferences] = useState({
+    dpi: 96,
+    resolution: { width: 1920, height: 1080 },
+  });
+
+  return (
+    <ProfilePreferencesContext.Provider value={{ preferences, setPreferences }}>
+      {children}
+    </ProfilePreferencesContext.Provider>
+  );
+};
+
+
+--- src/contexts/ShortcutsContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+
+const ShortcutsContext = createContext();
+
+const ShortcutsProvider = ({ children }) => {
+  const [shortcuts, setShortcuts] = useState({});
+
+  const updateShortcut = (action, key) => {
+    setShortcuts({ ...shortcuts, [action]: key });
+  };
+
+  useEffect(() => {
+    const storedShortcuts = JSON.parse(localStorage.getItem('shortcuts'));
+    if (storedShortcuts) setShortcuts(storedShortcuts);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+  }, [shortcuts]);
+
+  return (
+    <ShortcutsContext.Provider value={{ shortcuts, updateShortcut }}>
+      {children}
+    </ShortcutsContext.Provider>
+  );
+};
+
+export { ShortcutsContext, ShortcutsProvider };
+
+
+--- src/redux/radioHeadSlice.js ---
+
+
+
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = JSON.parse(localStorage.getItem('radioHeads')) || Array.from({ length: 40 }, (_, id) => ({
+  id: id.toString(),
+  incomingVolume: 50,
+  outgoingVolume: 50,
+  masterVolume: 50,
+  isMuted: false,
+}));
+
+const radioHeadsSlice = createSlice({
+  name: 'radioHeads',
+  initialState,
+  reducers: {
+    setVolume: (state, action) => {
+      const { id, type, value } = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead[] = value;
+      }
+    },
+    toggleMute: (state, action) => {
+      const id = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead.isMuted = !radioHead.isMuted;
+      }
+    },
+    saveSettings: (state) => {
+      localStorage.setItem('radioHeads', JSON.stringify(state));
+    },
+  },
+});
+
+export const { setVolume, toggleMute, saveSettings } = radioHeadsSlice.actions;
+
+export default radioHeadsSlice.reducer;
+  
+
+
+--- src/redux/store.js ---
+
+
+import { configureStore } from '@reduxjs/toolkit';
+import radioHeadsReducer from './radioHeadSlice';
+
+const store = configureStore({
+  reducer: {
+    radioHeads: radioHeadsReducer,
+  },
+});
+
+store.subscribe(() => {
+  const { saveSettings } = require('./radioHeadSlice').default.actions;
+  store.dispatch(saveSettings());
+});
+
+export default store;
+
+
+--- src/redux/radioheadSlice.js ---
+
+
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = JSON.parse(localStorage.getItem('radioHeads')) || Array.from({ length: 40 }, (_, id) => ({
+  id: id.toString(),
+  incomingVolume: 50,
+  outgoingVolume: 50,
+  masterVolume: 50,
+  isMuted: false,
+}));
+
+const radioHeadsSlice = createSlice({
+  name: 'radioHeads',
+  initialState,
+  reducers: {
+    setVolume: (state, action) => {
+      const { id, type, value } = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead[`${type}Volume`] = value;
+      }
+    },
+    toggleMute: (state, action) => {
+      const id = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead.isMuted = !radioHead.isMuted;
+      }
+    },
+    saveSettings: (state) => {
+      localStorage.setItem('radioHeads', JSON.stringify(state));
+    },
+  },
+});
+
+export const { setVolume, toggleMute, saveSettings } = radioHeadsSlice.actions;
+
+export default radioHeadsSlice.reducer;
+
+
+--- src/theme/theme.js ---
+
+
+import { createTheme } from '@material-ui/core/styles';
+
+export const lightTheme = createTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#6200ea',
+    },
+    secondary: {
+      main: '#03dac6',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+});
+
+export const darkTheme = createTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#bb86fc',
+    },
+    secondary: {
+      main: '#03dac6',
+    },
+    background: {
+      default: '#121212',
+    },
+  },
+});
+
+
+--- src/pages/Login.js ---
+
+
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { Container, TextField, Button, Typography } from '@material-ui/core';
+
+function Login() {
+  const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(email, password);
+  };
+
+  return (
+    <Container maxWidth="xs">
+      <Typography variant="h4" component="h1" gutterBottom>Login</Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <TextField label="Password" type="password" fullWidth margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button type="submit" variant="contained" color="primary" fullWidth>Login</Button>
+      </form>
+    </Container>
+  );
+}
+
+export default Login;
+
+
+--- src/App.js ---
+
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
+import Login from './pages/Login';
+import AdminPanel from './admin/AdminPanel';
+
+import { AuthProvider } from './contexts/AuthContext';
+import { PermissionsProvider } from './contexts/PermissionsContext';
+import { ShortcutsProvider } from './contexts/ShortcutsContext';
+import { MessagesProvider } from './contexts/MessagesContext';
+import { ProfilePreferencesProvider } from './contexts/ProfilePreferencesContext';
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <PermissionsProvider>
+        <ShortcutsProvider>
+          <MessagesProvider>
+            <ProfilePreferencesProvider>
+              <Router>
+                <Switch>
+                  <Route path="/login" component={Login} />
+                  <Route path="/admin" component={AdminPanel} />
+                  <Route path="/profile" component={Profile} />
+                  <Route path="/" component={Dashboard} />
+                </Switch>
+              </Router>
+            </ProfilePreferencesProvider>
+          </MessagesProvider>
+        </ShortcutsProvider>
+      </PermissionsProvider>
+    </AuthProvider>
+  );
+};
+
+export default App;
+
+
+--- src/api/api.js ---
+
+
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+});
+
+export const login = (credentials) => api.post('/api/auth/login', credentials);
+export const logout = () => api.post('/api/auth/logout');
+export const resetPassword = (email) => api.post('/api/auth/reset-password', { email });
+
+export const getUsers = () => api.get('/api/users');
+export const addUser = (user) => api.post('/api/users', user);
+export const modifyUser = (id, user) => api.put(`/api/users/${id}`, user);
+export const deleteUser = (id) => api.delete(`/api/users/${id}`);
+
+export default api;
+
+
+--- src/index.js ---
+
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import './App.css'; // Import your CSS
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+
+--- src/admin/AdminPanel.js ---
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const AdminPanel = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/users')
+      .then(response => setUsers(response.data))
+      .catch(error => console.error('Error fetching users:', error));
+  }, []);
+
+  const handleAddUser = () => {
+    // Add user logic
+  };
+
+  const handleModifyUser = (id) => {
+    // Modify user logic
+  };
+
+  const handleDeleteUser = (id) => {
+    // Delete user logic
+  };
+
+  return (
+    <div>
+      <h1>Admin Panel</h1>
+      <button onClick={handleAddUser}>Add User</button>
+      <ul>
+        {users.map(user => (
+          <li key={user._id}>
+            {user.name} - {user.role}
+            <button onClick={() => handleModifyUser(user._id)}>Modify</button>
+            <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default AdminPanel;
+
+
+--- src/components/Profile.js ---
+
+
+import React, { useContext } from 'react';
+import { ProfilePreferencesContext } from '../contexts/ProfilePreferencesContext';
+import { Slider, Typography } from '@material-ui/core';
+
+const Profile = () => {
+  const { preferences, setPreferences } = useContext(ProfilePreferencesContext);
+
+  const handleDpiChange = (event, newValue) => {
+    setPreferences(prev => ({ ...prev, dpi: newValue }));
+  };
+
+  const handleResolutionChange = (event, type) => {
+    const value = event.target.value;
+    setPreferences(prev => ({
+      ...prev,
+      resolution: { ...prev.resolution, [type]: value },
+    }));
+  };
+
+  return (
+    <div>
+      <Typography variant="h4">Profile Settings</Typography>
+      <Typography>DPI</Typography>
+      <Slider
+        value={preferences.dpi}
+        onChange={handleDpiChange}
+        min={50}
+        max={300}
+        aria-labelledby="dpi-slider"
+      />
+      <Typography>Resolution</Typography>
+      <input
+        type="number"
+        value={preferences.resolution.width}
+        onChange={(e) => handleResolutionChange(e, 'width')}
+        placeholder="Width"
+      />
+      <input
+        type="number"
+        value={preferences.resolution.height}
+        onChange={(e) => handleResolutionChange(e, 'height')}
+        placeholder="Height"
+      />
+    </div>
+  );
+};
+
+export default Profile;
+
+
+--- src/components/RadioHead.js ---
+
+
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setVolume, toggleMute } from '../redux/radioheadSlice';
+import { Button, Slider } from '@mui/material';
+
+const RadioHead = ({ id }) => {
+  const dispatch = useDispatch();
+  const radioHead = useSelector((state) => state.radioHeads.find((head) => head.id === id));
+
+  if (!radioHead) {
+    return null;
+  }
+
+  const handleVolumeChange = (type, value) => {
+    dispatch(setVolume({ id, type, value }));
+  };
+
+  const handleToggleMute = () => {
+    dispatch(toggleMute(id));
+  };
+
+  return (
+    <div>
+      <h3>RadioHead {id}</h3>
+      <Slider
+        value={radioHead.incomingVolume}
+        onChange={(e, value) => handleVolumeChange('incoming', value)}
+        aria-labelledby="incoming-volume-slider"
+      />
+      <Slider
+        value={radioHead.outgoingVolume}
+        onChange={(e, value) => handleVolumeChange('outgoing', value)}
+        aria-labelledby="outgoing-volume-slider"
+      />
+      <Slider
+        value={radioHead.masterVolume}
+        onChange={(e, value) => handleVolumeChange('master', value)}
+        aria-labelledby="master-volume-slider"
+      />
+      <Button onClick={handleToggleMute}>
+        {radioHead.isMuted ? 'Unmute' : 'Mute'}
+      </Button>
+    </div>
+  );
+};
+
+export default RadioHead;
+
+
+--- src/components/Widget.js ---
+
+
+import React from 'react';
+import { Paper, Typography } from '@material-ui/core';
+
+function Widget() {
+  return (
+    <Paper>
+      <Typography variant="h6">Widget</Typography>
+      {/* Widget content */}
+    </Paper>
+  );
+}
+
+export default Widget;
+
+
+--- src/components/Dashboard.js ---
+
+
+import React from 'react';
+import GridLayout from 'react-grid-layout';
+import RadioHead from './RadioHead';
+import { useSelector } from 'react-redux';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+
+const Dashboard = () => {
+  const radioHeads = useSelector(state => state.radioHeads);
+
+  const layout = radioHeads.map((head, index) => ({
+    i: head.id,
+    x: (index % 6) * 2,
+    y: Math.floor(index / 6) * 2,
+    w: 2,
+    h: 2,
+    isResizable: true,
+    isDraggable: true,
+  }));
+
+  return (
+    <div style={{ height: '100vh', width: '100vw' }}>
+      <GridLayout
+        className="layout"
+        layout={layout}
+        cols={12}
+        rowHeight={30}
+        width={1200}
+      >
+        {radioHeads.map(head => (
+          <div key={head.id}>
+            <RadioHead {...head} />
+          </div>
+        ))}
+      </GridLayout>
+    </div>
+  );
+};
+
+export default Dashboard;
+
+
+--- src/utils/logger.js ---
+
+
+export const logPerformance = (metric) => {
+  console.log('Performance metric:', metric);
+};
+
+export const logError = (error) => {
+  console.error('Error:', error);
+};
+
+
+--- src/contexts/PermissionsContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+import api from '../api/api';
+
+const PermissionsContext = createContext();
+
+const PermissionsProvider = ({ children }) => {
+  const [permissions, setPermissions] = useState([]);
+
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const response = await api.getPermissions();
+        setPermissions(response.data);
+      } catch (error) {
+        console.error('Failed to fetch permissions', error);
+      }
+    };
+    fetchPermissions();
+  }, []);
+
+  return (
+    <PermissionsContext.Provider value={{ permissions }}>
+      {children}
+    </PermissionsContext.Provider>
+  );
+};
+
+export { PermissionsContext, PermissionsProvider };
+
+
+--- src/contexts/MessagesContext.js ---
+
+
+import React, { createContext, useState } from 'react';
+
+const MessagesContext = createContext();
+
+const MessagesProvider = ({ children }) => {
+  const [messages, setMessages] = useState([]);
+
+  const addMessage = (message) => {
+    setMessages([...messages, message]);
+  };
+
+  const removeMessage = (index) => {
+    setMessages(messages.filter((_, i) => i !== index));
+  };
+
+  return (
+    <MessagesContext.Provider value={{ messages, addMessage, removeMessage }}>
+      {children}
+    </MessagesContext.Provider>
+  );
+};
+
+export { MessagesContext, MessagesProvider };
+
+
+--- src/contexts/AuthContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import api from '../api/api';
+
+const AuthContext = createContext();
+
+const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const history = useHistory();
+
+  const login = async (email, password) => {
+    try {
+      const response = await api.login(email, password);
+      setUser(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      history.push('/');
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    history.push('/login');
+  };
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) setUser(storedUser);
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export { AuthContext, AuthProvider };
+
+
+--- src/contexts/ProfilePreferencesContext.js ---
+
+
+import React, { createContext, useState } from 'react';
+
+export const ProfilePreferencesContext = createContext();
+
+export const ProfilePreferencesProvider = ({ children }) => {
+  const [preferences, setPreferences] = useState({
+    dpi: 96,
+    resolution: { width: 1920, height: 1080 },
+  });
+
+  return (
+    <ProfilePreferencesContext.Provider value={{ preferences, setPreferences }}>
+      {children}
+    </ProfilePreferencesContext.Provider>
+  );
+};
+
+
+--- src/contexts/ShortcutsContext.js ---
+
+
+import React, { createContext, useState, useEffect } from 'react';
+
+const ShortcutsContext = createContext();
+
+const ShortcutsProvider = ({ children }) => {
+  const [shortcuts, setShortcuts] = useState({});
+
+  const updateShortcut = (action, key) => {
+    setShortcuts({ ...shortcuts, [action]: key });
+  };
+
+  useEffect(() => {
+    const storedShortcuts = JSON.parse(localStorage.getItem('shortcuts'));
+    if (storedShortcuts) setShortcuts(storedShortcuts);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+  }, [shortcuts]);
+
+  return (
+    <ShortcutsContext.Provider value={{ shortcuts, updateShortcut }}>
+      {children}
+    </ShortcutsContext.Provider>
+  );
+};
+
+export { ShortcutsContext, ShortcutsProvider };
+
+
+--- src/redux/radioHeadSlice.js ---
+
+
+
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = JSON.parse(localStorage.getItem('radioHeads')) || Array.from({ length: 40 }, (_, id) => ({
+  id: id.toString(),
+  incomingVolume: 50,
+  outgoingVolume: 50,
+  masterVolume: 50,
+  isMuted: false,
+}));
+
+const radioHeadsSlice = createSlice({
+  name: 'radioHeads',
+  initialState,
+  reducers: {
+    setVolume: (state, action) => {
+      const { id, type, value } = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead[] = value;
+      }
+    },
+    toggleMute: (state, action) => {
+      const id = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead.isMuted = !radioHead.isMuted;
+      }
+    },
+    saveSettings: (state) => {
+      localStorage.setItem('radioHeads', JSON.stringify(state));
+    },
+  },
+});
+
+export const { setVolume, toggleMute, saveSettings } = radioHeadsSlice.actions;
+
+export default radioHeadsSlice.reducer;
+  
+
+
+--- src/redux/store.js ---
+
+
+import { configureStore } from '@reduxjs/toolkit';
+import radioHeadsReducer from './radioHeadSlice';
+
+const store = configureStore({
+  reducer: {
+    radioHeads: radioHeadsReducer,
+  },
+});
+
+store.subscribe(() => {
+  const { saveSettings } = require('./radioHeadSlice').default.actions;
+  store.dispatch(saveSettings());
+});
+
+export default store;
+
+
+--- src/redux/radioheadSlice.js ---
+
+
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = JSON.parse(localStorage.getItem('radioHeads')) || Array.from({ length: 40 }, (_, id) => ({
+  id: id.toString(),
+  incomingVolume: 50,
+  outgoingVolume: 50,
+  masterVolume: 50,
+  isMuted: false,
+}));
+
+const radioHeadsSlice = createSlice({
+  name: 'radioHeads',
+  initialState,
+  reducers: {
+    setVolume: (state, action) => {
+      const { id, type, value } = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead[`${type}Volume`] = value;
+      }
+    },
+    toggleMute: (state, action) => {
+      const id = action.payload;
+      const radioHead = state.find(head => head.id === id);
+      if (radioHead) {
+        radioHead.isMuted = !radioHead.isMuted;
+      }
+    },
+    saveSettings: (state) => {
+      localStorage.setItem('radioHeads', JSON.stringify(state));
+    },
+  },
+});
+
+export const { setVolume, toggleMute, saveSettings } = radioHeadsSlice.actions;
+
+export default radioHeadsSlice.reducer;
+
+
+--- src/theme/theme.js ---
+
+
+import { createTheme } from '@material-ui/core/styles';
+
+export const lightTheme = createTheme({
+  palette: {
+    type: 'light',
+    primary: {
+      main: '#6200ea',
+    },
+    secondary: {
+      main: '#03dac6',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+});
+
+export const darkTheme = createTheme({
+  palette: {
+    type: 'dark',
+    primary: {
+      main: '#bb86fc',
+    },
+    secondary: {
+      main: '#03dac6',
+    },
+    background: {
+      default: '#121212',
+    },
+  },
+});
+
+
+--- src/pages/Login.js ---
+
+
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { Container, TextField, Button, Typography } from '@material-ui/core';
+
+function Login() {
+  const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    login(email, password);
+  };
+
+  return (
+    <Container maxWidth="xs">
+      <Typography variant="h4" component="h1" gutterBottom>Login</Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <TextField label="Password" type="password" fullWidth margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button type="submit" variant="contained" color="primary" fullWidth>Login</Button>
+      </form>
+    </Container>
+  );
+}
+
+export default Login;
+
+
+--- backend/models/User.js ---
+
+
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+}, { timestamps: true });
+
+const User = mongoose.model('User', userSchema);
+
+export default User;
+
+
+--- backend/server.js ---
+
+
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+
+--- backend/routes/userRoutes.js ---
+
+
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
+
+const router = express.Router();
+
+router.use(authMiddleware);
+
+router.get('/', async (req, res) => {
+  const users = await User.find();
+  res.send(users);
+});
+
+router.post('/', async (req, res) => {
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password: await bcrypt.hash(password, 10), role });
+  await user.save();
+  res.send(user);
+});
+
+router.put('/:id', async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.send(user);
+});
+
+router.delete('/:id', async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.send('User deleted');
+});
+
+export default router;
+
+
+--- backend/routes/authRoutes.js ---
+
+
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+
+const router = express.Router();
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).send('Email or password is wrong');
+
+  const validPass = await bcrypt.compare(password, user.password);
+  if (!validPass) return res.status(400).send('Invalid password');
+
+  const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET);
+  res.header('Authorization', token).send(token);
+});
+
+router.post('/logout', (req, res) => {
+  res.send('Logout successful');
+});
+
+router.post('/reset-password', async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).send('User not found');
+  // Reset password logic
+  res.send('Password reset email sent');
+});
+
+export default router;
+
+
+--- backend/middleware/authMiddleware.js ---
+
+
+import jwt from 'jsonwebtoken';
+
+export const authMiddleware = (req, res, next) => {
+  const token = req.header('Authorization').replace('Bearer ', '');
+  if (!token) return res.status(401).send('Access Denied');
+
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
+    next();
+  } catch (error) {
+    res.status(400).send('Invalid Token');
+  }
+};
+
+
+--- backend/models/User.js ---
+
+
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+}, { timestamps: true });
+
+const User = mongoose.model('User', userSchema);
+
+export default User;
+
+
+--- backend/server.js ---
+
+
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+
+--- backend/routes/userRoutes.js ---
+
+
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
+
+const router = express.Router();
+
+router.use(authMiddleware);
+
+router.get('/', async (req, res) => {
+  const users = await User.find();
+  res.send(users);
+});
+
+router.post('/', async (req, res) => {
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password: await bcrypt.hash(password, 10), role });
+  await user.save();
+  res.send(user);
+});
+
+router.put('/:id', async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.send(user);
+});
+
+router.delete('/:id', async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+  res.send('User deleted');
+});
+
+export default router;
+
+
+--- backend/routes/authRoutes.js ---
+
+
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+
+const router = express.Router();
+
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).send('Email or password is wrong');
+
+  const validPass = await bcrypt.compare(password, user.password);
+  if (!validPass) return res.status(400).send('Invalid password');
+
+  const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET);
+  res.header('Authorization', token).send(token);
+});
+
+router.post('/logout', (req, res) => {
+  res.send('Logout successful');
+});
+
+router.post('/reset-password', async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).send('User not found');
+  // Reset password logic
+  res.send('Password reset email sent');
+});
+
+export default router;
+
+
+--- backend/middleware/authMiddleware.js ---
+
+
+import jwt from 'jsonwebtoken';
+
+export const authMiddleware = (req, res, next) => {
+  const token = req.header('Authorization').replace('Bearer ', '');
+  if (!token) return res.status(401).send('Access Denied');
+
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
+    next();
+  } catch (error) {
+    res.status(400).send('Invalid Token');
+  }
+};

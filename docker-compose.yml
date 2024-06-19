@@ -1,36 +1,26 @@
 version: '3.8'
 
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-    command: npm start
-    depends_on:
-      - mongo
-
-  electron:
-    build:
-      context: .
-      dockerfile: Dockerfile.electron
-    volumes:
-      - .:/app
-    environment:
-      - NODE_ENV=development
-    command: npm run electron-start
-
-  mongo:
+  mongodb:
     image: mongo
+    container_name: mongodb
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongodbdata:/data/db
+
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/mern_project
+      - JWT_SECRET=your_jwt_secret
+    depends_on:
+      - mongodb
 
 volumes:
-  mongo-data:
+  mongodbdata:

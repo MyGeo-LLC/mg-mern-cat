@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setVolume, toggleMute } from '../redux/radioheadSlice';
+import './RadioHead.css';
+
 import { Button, Slider } from '@mui/material';
+import { setVolume, toggleMute } from '../redux/radioHeadSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
+import React from 'react';
 
 const RadioHead = ({ id }) => {
   const dispatch = useDispatch();
@@ -20,7 +23,7 @@ const RadioHead = ({ id }) => {
   };
 
   return (
-    <div>
+    <div className="radiohead">
       <h3>RadioHead {id}</h3>
       <Slider
         value={radioHead.incomingVolume}

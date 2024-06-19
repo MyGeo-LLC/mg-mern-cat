@@ -1,3 +1,5 @@
+// src/utils/logger.js
+
 export const logPerformance = (metric) => {
   console.log('Performance metric:', metric);
 };
