@@ -1,0 +1,30 @@
+/* Root container styling */
+.about-page {
+  background-color: #1e1e1e; /* Dark background color */
+  color: #ffffff; /* White text color */
+  padding: 32px; /* Consistent padding */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+  margin: 32px auto; /* Center alignment */
+  max-width: 800px; /* Limit width */
+}
+
+/* Typography */
+.about-page .MuiTypography-h4 {
+  font-family: 'Roboto', sans-serif; /* Modern font */
+  font-weight: 500; /* Medium weight */
+  margin-bottom: 16px; /* Spacing below header */
+}
+
+.about-page .MuiTypography-body1 {
+  font-family: 'Roboto', sans-serif; /* Consistent font */
+  line-height: 1.6; /* Comfortable line height */
+  margin-bottom: 8px; /* Spacing between text */
+}
+
+.about-page .MuiTypography-h5 {
+  font-family: 'Roboto', sans-serif; /* Modern font */
+  font-weight: 500; /* Medium weight */
+  margin-top: 24px; /* Spacing above subheader */
+  margin-bottom: 16px; /* Spacing below subheader */
+}

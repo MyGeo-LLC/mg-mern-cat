@@ -1,19 +1,32 @@
-import './Dashboard.css';
+import './DraggableWidget.css';
 
-import Draggable from 'react-draggable';
-import React from 'react';
-import Widget from './Widget';
-import { useParams } from 'react-router-dom';
+import { Card, CardContent, IconButton } from '@material-ui/core';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import React, { useState } from 'react';
 
-const DraggableWidget = () => {
-  const { id } = useParams();
+const DraggableWidget = ({ id, title, children }) => {
+  const [isMinimized, setIsMinimized] = useState(false);
+
+  const handleToggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+  };
 
   return (
-    <Draggable>
-      <div className="draggable-item">
-        <Widget id={id} />
-      </div>
-    </Draggable>
+    <Card className="draggable-widget">
+      <CardContent>
+        <div className="widget-header">
+          <h4>{title}</h4>
+          <IconButton onClick={handleToggleMinimize}>
+            {isMinimized ? <ExpandMore /> : <ExpandLess />}
+          </IconButton>
+        </div>
+        {!isMinimized && (
+          <div className="widget-content">
+            {children}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

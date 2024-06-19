@@ -1,33 +1,71 @@
-// src/theme/theme.js
-
 import { createTheme } from '@material-ui/core/styles';
 
-export const lightTheme = createTheme({
+const lightTheme = createTheme({
   palette: {
     type: 'light',
     primary: {
-      main: '#6200ea',
+      main: '#ffffff',
     },
     secondary: {
-      main: '#03dac6',
+      main: '#000000',
     },
-    background: {
-      default: '#f5f5f5',
+  },
+  typography: {
+    fontFamily: 'Roboto, sans-serif',
+    h6: {
+      fontWeight: 500,
+      fontSize: '1.25rem',
+      lineHeight: 1.6,
+    },
+    body1: {
+      lineHeight: 1.6,
+      fontSize: '1rem',
+    },
+  },
+  overrides: {
+    MuiButton: {
+      containedPrimary: {
+        backgroundColor: '#e82127',
+        '&:hover': {
+          backgroundColor: '#c51e22',
+        },
+      },
     },
   },
 });
 
-export const darkTheme = createTheme({
+const darkTheme = createTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#bb86fc',
+      main: '#1e1e1e',
     },
     secondary: {
-      main: '#03dac6',
+      main: '#ffffff',
     },
-    background: {
-      default: '#121212',
+  },
+  typography: {
+    fontFamily: 'Roboto, sans-serif',
+    h6: {
+      fontWeight: 500,
+      fontSize: '1.25rem',
+      lineHeight: 1.6,
+    },
+    body1: {
+      lineHeight: 1.6,
+      fontSize: '1rem',
+    },
+  },
+  overrides: {
+    MuiButton: {
+      containedPrimary: {
+        backgroundColor: '#e82127',
+        '&:hover': {
+          backgroundColor: '#c51e22',
+        },
+      },
     },
   },
 });
+
+export { lightTheme, darkTheme };

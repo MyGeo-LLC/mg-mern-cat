@@ -1,0 +1,12 @@
+/* Settings icon styling */
+.settings-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #e82127; /* Tesla red */
+  transition: color 0.3s ease; /* Smooth transition */
+}
+
+.settings-icon:hover {
+  color: #c51e22; /* Darker red on hover */
+}

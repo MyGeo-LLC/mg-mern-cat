@@ -1,21 +1,40 @@
 import './Dashboard.css';
 
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Button, Container, Typography } from '@material-ui/core';
+import React, { useContext } from 'react';
 
-import DraggableRadioHead from './DraggableRadioHead';
+import { AuthContext } from '../contexts/AuthContext';
+import DetailsWidget from './DetailsWidget';
 import DraggableWidget from './DraggableWidget';
-import React from 'react';
+import RadioHead from './RadioHead';
+import SettingsIcon from './SettingsIcon';
 
 const Dashboard = () => {
+  const { logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
-    <Router>
-      <div className="dashboard">
-        <Routes>
-          <Route path="/radiohead/:id" element={<DraggableRadioHead id="1" />} />
-          <Route path="/widget/:id" element={<DraggableWidget id="1" />} />
-        </Routes>
-      </div>
-    </Router>
+    <Container className="dashboard">
+      <Typography variant="h4">Dashboard</Typography>
+      <Button variant="contained" color="secondary" onClick={handleLogout}>
+        Logout
+      </Button>
+      <SettingsIcon onClick={() => console.log('Settings clicked')} />
+      {/* Example RadioHead and DraggableWidget components */}
+      <RadioHead
+        id={1}
+        name="RadioHead 1"
+        status="active"
+        onPushToTalk={() => console.log('Push to talk')}
+        onMute={() => console.log('Mute')}
+      />
+      <DraggableWidget id="details" title="Details Widget">
+        <DetailsWidget radioHead={{ name: 'RadioHead 1', status: 'active', fileName: 'recording1.mp3' }} />
+      </DraggableWidget>
+    </Container>
   );
 };
 

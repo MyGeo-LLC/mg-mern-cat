@@ -1,40 +1,36 @@
 /* Root container styling */
-.radio-head {
+.donate-page {
   background-color: #1e1e1e; /* Dark background color */
   color: #ffffff; /* White text color */
+  padding: 32px; /* Consistent padding */
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
-  padding: 16px; /* Consistent padding */
-  margin: 16px 0; /* Vertical margin */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
-}
-
-.radio-head:hover {
-  transform: translateY(-5px); /* Lift effect on hover */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+  margin: 32px auto; /* Center alignment */
+  max-width: 800px; /* Limit width */
+  text-align: center; /* Center text */
 }
 
 /* Typography */
-.radio-head .MuiTypography-h6 {
+.donate-page .MuiTypography-h4 {
   font-family: 'Roboto', sans-serif; /* Modern font */
   font-weight: 500; /* Medium weight */
-  margin-bottom: 8px; /* Spacing below header */
+  margin-bottom: 16px; /* Spacing below header */
 }
 
-.radio-head .MuiTypography-body1 {
+.donate-page .MuiTypography-body1 {
   font-family: 'Roboto', sans-serif; /* Consistent font */
   line-height: 1.6; /* Comfortable line height */
-  margin: 4px 0; /* Spacing between text */
+  margin-bottom: 16px; /* Spacing between text */
 }
 
 /* Button styling */
-.radio-head .MuiButton-containedPrimary {
+.donate-page .MuiButton-containedPrimary {
   background-color: #e82127; /* Tesla red */
   color: #ffffff; /* White text */
   margin-top: 16px; /* Spacing above button */
   transition: background-color 0.3s ease; /* Smooth transition */
 }
 
-.radio-head .MuiButton-containedPrimary:hover {
+.donate-page .MuiButton-containedPrimary:hover {
   background-color: #c51e22; /* Darker red on hover */
 }

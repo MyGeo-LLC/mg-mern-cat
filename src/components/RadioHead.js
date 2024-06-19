@@ -1,49 +1,38 @@
 import './RadioHead.css';
 
-import { Button, Slider } from '@mui/material';
-import { setVolume, toggleMute } from '../redux/radioHeadSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { Button, Card, CardContent, Typography } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 
-import React from 'react';
+const RadioHead = ({ id, name, status, onPushToTalk, onMute }) => {
+  const [isMuted, setIsMuted] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(status);
 
-const RadioHead = ({ id }) => {
-  const dispatch = useDispatch();
-  const radioHead = useSelector((state) => state.radioHeads.find((head) => head.id === id));
+  useEffect(() => {
+    // Simulate real-time status updates
+    const statusInterval = setInterval(() => {
+      setCurrentStatus((prevStatus) => (prevStatus === 'active' ? 'inactive' : 'active'));
+    }, 5000);
+    return () => clearInterval(statusInterval);
+  }, []);
 
-  if (!radioHead) {
-    return null;
-  }
-
-  const handleVolumeChange = (type, value) => {
-    dispatch(setVolume({ id, type, value }));
-  };
-
-  const handleToggleMute = () => {
-    dispatch(toggleMute(id));
+  const handleMuteToggle = () => {
+    setIsMuted(!isMuted);
+    onMute(id, !isMuted);
   };
 
   return (
-    <div className="radiohead">
-      <h3>RadioHead {id}</h3>
-      <Slider
-        value={radioHead.incomingVolume}
-        onChange={(e, value) => handleVolumeChange('incoming', value)}
-        aria-labelledby="incoming-volume-slider"
-      />
-      <Slider
-        value={radioHead.outgoingVolume}
-        onChange={(e, value) => handleVolumeChange('outgoing', value)}
-        aria-labelledby="outgoing-volume-slider"
-      />
-      <Slider
-        value={radioHead.masterVolume}
-        onChange={(e, value) => handleVolumeChange('master', value)}
-        aria-labelledby="master-volume-slider"
-      />
-      <Button onClick={handleToggleMute}>
-        {radioHead.isMuted ? 'Unmute' : 'Mute'}
-      </Button>
-    </div>
+    <Card className="radio-head">
+      <CardContent>
+        <Typography variant="h6">{name}</Typography>
+        <Typography variant="body1">Status: {currentStatus}</Typography>
+        <Button variant="contained" color="primary" onClick={() => onPushToTalk(id)}>
+          Push to Talk
+        </Button>
+        <Button variant="contained" color={isMuted ? "secondary" : "default"} onClick={handleMuteToggle}>
+          {isMuted ? "Unmute" : "Mute"}
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
