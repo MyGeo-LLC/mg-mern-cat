@@ -1,87 +1,65 @@
-import './Dashboard.css';
+import { Box, Button, Container, Typography } from '@mui/material';
+import React, { useContext } from 'react';
 
-import { Button, Container, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
-
-import API from '../api/axiosInstance';
-import DraggableRadioHead from './DraggableRadioHead';
+import { AuthContext } from '../contexts/AuthContext';
 import DraggableWidget from './DraggableWidget';
-import SettingsIcon from './SettingsIcon';
+import RadioHead from './RadioHead';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  dashboard: {
+    backgroundColor: '#1e1e1e',
+    color: '#ffffff',
     padding: theme.spacing(4),
-    backgroundColor: '#f5f5f5',
-    borderRadius: theme.spacing(2),
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    transition: 'transform 0.3s, box-shadow 0.3s',
-    '&:hover': {
-      transform: 'translateY(-5px)',
-      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
-    },
-  },
-  title: {
-    marginBottom: theme.spacing(4),
+    borderRadius: 8,
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    margin: theme.spacing(4, 0),
+    maxWidth: '1000px',
+    animation: '$fadeIn 0.5s ease-in-out',
   },
   button: {
-    marginBottom: theme.spacing(2),
+    backgroundColor: '#e82127',
+    '&:hover': {
+      backgroundColor: '#c51e22',
+    },
   },
-  settingsIcon: {
-    cursor: 'pointer',
-    marginBottom: theme.spacing(4),
-  },
-  radioHead: {
-    marginBottom: theme.spacing(4),
-  },
-  widget: {
-    marginBottom: theme.spacing(4),
+  '@keyframes fadeIn': {
+    '0%': {
+      opacity: 0,
+      transform: 'translateY(-10px)',
+    },
+    '100%': {
+      opacity: 1,
+      transform: 'translateY(0)',
+    },
   },
 }));
 
 const Dashboard = () => {
   const classes = useStyles();
   const { logout } = useContext(AuthContext);
-  const [radioHeads, setRadioHeads] = useState([]);
-
-  useEffect(() => {
-    const fetchRadioHeads = async () => {
-      try {
-        const { data } = await API.get('/radioheads');
-        setRadioHeads(data);
-      } catch (error) {
-        console.error('Error fetching radio heads:', error);
-      }
-    };
-
-    fetchRadioHeads();
-  }, []);
 
   const handleLogout = () => {
     logout();
   };
 
   return (
-    <Container className={classes.root}>
-      <Typography variant="h4" className={classes.title}>Dashboard</Typography>
-      <Button variant="contained" color="secondary" onClick={handleLogout} className={classes.button}>
+    <Container className={classes.dashboard}>
+      <Typography variant="h4">Dashboard</Typography>
+      <Button variant="contained" onClick={handleLogout} className={classes.button}>
         Logout
       </Button>
-      <SettingsIcon onClick={() => console.log('Settings clicked')} className={classes.settingsIcon} />
-      {radioHeads.map((radioHead) => (
-        <DraggableRadioHead
-          key={radioHead._id}
-          id={radioHead._id}
-          name={radioHead.name}
-          status={radioHead.status}
-          onPushToTalk={() => console.log('Push to talk')}
-          onMute={() => console.log('Mute')}
-          className={classes.radioHead}
-        />
+      {[1, 2, 3, 4, 5].map((id) => (
+        <DraggableWidget key={id} id={`radiohead-${id}`} title={`RadioHead ${id}`}>
+          <RadioHead
+            id={id}
+            name={`RadioHead ${id}`}
+            status="active"
+            onPushToTalk={() => console.log('Push to talk')}
+            onMute={() => console.log('Mute')}
+          />
+        </DraggableWidget>
       ))}
-      <DraggableWidget id="details" title="Details Widget" className={classes.widget}>
-        <div>Widget Content Here</div>
-      </DraggableWidget>
     </Container>
   );
 };

@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import About from './pages/About';
 import AdminPanel from './components/AdminPanel';
-import AuthContextProviderWrapper from './contexts/AuthContext';
+import AuthProvider from './contexts/AuthContext';
 import Dashboard from './components/Dashboard';
 import Donate from './pages/Donate';
 import DraggableRadioHead from './components/DraggableRadioHead';
@@ -27,14 +27,19 @@ const App = () => {
   const [theme, setTheme] = useState(themes.darkTheme1);
 
   const toggleTheme = () => {
-    setTheme(prevTheme =>
-      prevTheme === themes.darkTheme1 ? themes.lightTheme1 : themes.darkTheme1
-    );
+    setTheme((prevTheme) => {
+      if (prevTheme === themes.darkTheme1) return themes.lightTheme1;
+      if (prevTheme === themes.lightTheme1) return themes.darkTheme2;
+      if (prevTheme === themes.darkTheme2) return themes.lightTheme2;
+      if (prevTheme === themes.lightTheme2) return themes.darkTheme3;
+      if (prevTheme === themes.darkTheme3) return themes.lightTheme3;
+      return themes.darkTheme1;
+    });
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <AuthContextProviderWrapper>
+      <AuthProvider>
         <MessagesContextProvider>
           <PermissionsContextProvider>
             <ProfilePreferencesContextProvider>
@@ -101,7 +106,7 @@ const App = () => {
             </ProfilePreferencesContextProvider>
           </PermissionsContextProvider>
         </MessagesContextProvider>
-      </AuthContextProviderWrapper>
+      </AuthProvider>
     </ThemeProvider>
   );
 };

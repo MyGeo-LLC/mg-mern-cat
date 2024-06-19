@@ -1,30 +1,26 @@
-import { Card, CardContent, IconButton, Typography } from '@mui/material';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import React, { useState } from 'react';
-
+import { Card, CardContent, Typography, IconButton } from '@mui/material';
+import { ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
   draggableWidget: {
-    backgroundColor: theme.palette.background.paper,
-    color: theme.palette.text.primary,
-    borderRadius: '8px',
+    backgroundColor: '#1e1e1e',
+    color: '#ffffff',
+    borderRadius: 8,
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    margin: '16px 0',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-    cursor: 'grab',
+    padding: theme.spacing(2),
+    margin: theme.spacing(2, 0),
+    transition: 'transform 0.3s, box-shadow 0.3s',
     '&:hover': {
       transform: 'translateY(-5px)',
       boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3)',
     },
   },
-  widgetHeader: {
+  header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  widgetContent: {
-    paddingTop: '10px',
   },
 }));
 
@@ -39,17 +35,13 @@ const DraggableWidget = ({ id, title, children }) => {
   return (
     <Card className={classes.draggableWidget} draggable>
       <CardContent>
-        <div className={classes.widgetHeader}>
+        <div className={classes.header}>
           <Typography variant="h6">{title}</Typography>
           <IconButton onClick={handleToggleMinimize}>
-            {isMinimized ? <ExpandMore /> : <ExpandLess />}
+            {isMinimized ? <ExpandMoreIcon style={{ color: '#ffffff' }} /> : <ExpandLessIcon style={{ color: '#ffffff' }} />}
           </IconButton>
         </div>
-        {!isMinimized && (
-          <div className={classes.widgetContent}>
-            {children}
-          </div>
-        )}
+        {!isMinimized && <div>{children}</div>}
       </CardContent>
     </Card>
   );
