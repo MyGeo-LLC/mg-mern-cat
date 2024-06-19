@@ -1,5 +1,6 @@
+import { Snackbar, SnackbarContent } from '@mui/material';
+
 import React from 'react';
-import { Snackbar, SnackbarContent } from '@material-ui/core';
 
 const CustomSnackbar = ({ message, open, onClose }) => (
   <Snackbar
@@ -11,10 +12,7 @@ const CustomSnackbar = ({ message, open, onClose }) => (
     autoHideDuration={6000}
     onClose={onClose}
   >
-    <SnackbarContent
-      message={<span>{message}</span>}
-      onClose={onClose}
-    />
+    <SnackbarContent message={<span>{message}</span>} onClose={onClose} />
   </Snackbar>
 );
 

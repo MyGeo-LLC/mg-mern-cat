@@ -1,13 +1,17 @@
-import React from 'react';
-import { Container, Typography } from '@material-ui/core';
 import './Footer.css';
 
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
+
+import React from 'react';
+
 const Footer = () => (
-  <footer className="footer">
-    <Container>
-      <Typography variant="body1">© 2023 MERN Project. All rights reserved.</Typography>
-    </Container>
-  </footer>
+  <AppBar position="static" className="footer">
+    <Toolbar>
+      <Typography variant="body1" className="footer-text">
+        © 2024 My App. All rights reserved.
+      </Typography>
+    </Toolbar>
+  </AppBar>
 );
 
 export default Footer;

@@ -1,0 +1,21 @@
+.audio-indicator {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    margin-top: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .audio-indicator.incoming {
+    background-color: #1a237e;
+  }
+  
+  .audio-indicator.outgoing {
+    background-color: #880e4f;
+  }
+  
+  .audio-indicator.active {
+    background-color: #00e676;
+  }
+  

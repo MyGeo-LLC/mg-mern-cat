@@ -1,14 +1,20 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  dpi: { type: Number, default: 150 },
-  resolution: {
-    width: { type: Number, default: 1920 },
-    height: { type: Number, default: 1080 },
-  },
 });
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

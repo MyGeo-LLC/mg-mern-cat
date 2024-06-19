@@ -1,11 +1,9 @@
-// src/components/Profile.js
+import { Box, Button, Container, Slider, TextField, Typography } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { Box, Button, Container, Slider, TextField, Typography } from '@material-ui/core';
-import React, { useContext } from 'react';
-
+import API from '../api/axiosInstance';
 import { ProfilePreferencesContext } from '../contexts/ProfilePreferencesContext';
-import { makeStyles } from '@material-ui/core/styles';
-import { updateProfile } from '../api/api';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,64 +29,69 @@ const useStyles = makeStyles((theme) => ({
 const Profile = () => {
   const classes = useStyles();
   const { preferences, setPreferences } = useContext(ProfilePreferencesContext);
+  const [loading, setLoading] = useState(true);
 
-  const handleDpiChange = (event, newValue) => {
-    setPreferences(prev => ({ ...prev, dpi: newValue }));
-  };
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { data } = await API.get('/users/profile');
+        setPreferences(data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setLoading(false);
+      }
+    };
 
-  const handleResolutionChange = (event, type) => {
-    const value = event.target.value;
-    setPreferences(prev => ({
-      ...prev,
-      resolution: { ...prev.resolution, [type]: value },
-    }));
+    loadProfile();
+  }, [setPreferences]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setPreferences((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = async () => {
     try {
-      await updateProfile(preferences);
+      await API.put('/users/profile', preferences);
       alert('Profile updated successfully!');
     } catch (error) {
-      console.error(error);
+      console.error('Error updating profile:', error);
       alert('Failed to update profile.');
     }
   };
 
+  if (loading) return <Typography>Loading...</Typography>;
+
   return (
     <Container maxWidth="sm" className={classes.root}>
-      <Typography variant="h4" gutterBottom>Profile Settings</Typography>
-      <Box className={classes.section}>
-        <Typography gutterBottom>DPI</Typography>
-        <Slider
-          value={preferences.dpi}
-          onChange={handleDpiChange}
-          min={50}
-          max={300}
-          aria-labelledby="dpi-slider"
-        />
-      </Box>
-      <Box className={classes.section}>
-        <Typography gutterBottom>Resolution</Typography>
-        <TextField
-          className={classes.input}
-          label="Width"
-          type="number"
-          value={preferences.resolution.width}
-          onChange={(e) => handleResolutionChange(e, 'width')}
-          fullWidth
-          variant="outlined"
-        />
-        <TextField
-          className={classes.input}
-          label="Height"
-          type="number"
-          value={preferences.resolution.height}
-          onChange={(e) => handleResolutionChange(e, 'height')}
-          fullWidth
-          variant="outlined"
-        />
-      </Box>
-      <Button variant="contained" color="primary" onClick={handleSave}>Save Changes</Button>
+      <Typography variant="h4" gutterBottom>User Profile</Typography>
+      <TextField
+        className={classes.input}
+        label="Name"
+        name="name"
+        value={preferences.name || ''}
+        onChange={handleChange}
+        fullWidth
+        variant="outlined"
+      />
+      <TextField
+        className={classes.input}
+        label="Email"
+        name="email"
+        value={preferences.email || ''}
+        onChange={handleChange}
+        fullWidth
+        variant="outlined"
+      />
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="primary"
+        onClick={handleSave}
+      >
+        Save Changes
+      </Button>
     </Container>
   );
 };

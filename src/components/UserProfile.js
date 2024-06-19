@@ -1,11 +1,9 @@
-// src/components/UserProfile.js
-
-import { Button, Container, TextField, Typography } from '@material-ui/core';
+import { Button, Container, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
 import { fetchProfile, updateProfile } from '../api/api';
 
 import { ProfilePreferencesContext } from '../contexts/ProfilePreferencesContext';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {

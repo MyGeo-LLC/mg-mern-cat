@@ -1,23 +1,17 @@
-import './Login.css';
-
-import { Button, Container, TextField, Typography } from '@material-ui/core';
-import React, { useContext, useState } from 'react';
-
+import React, { useState, useContext } from 'react';
+import { Button, Container, TextField, Typography } from '@mui/material';
 import { AuthContext } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
-function Login() {
+const Login = () => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (login(email, password)) {
-      navigate('/dashboard');
-    } else {
+    const success = await login(email, password);
+    if (!success) {
       setError('Invalid credentials');
     }
   };
@@ -49,6 +43,6 @@ function Login() {
       </form>
     </Container>
   );
-}
+};
 
 export default Login;

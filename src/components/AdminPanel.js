@@ -1,10 +1,32 @@
-// src/admin/AdminPanel.js
-
+import { Button, Container, IconButton, List, ListItem, ListItemText, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  adminPanel: {
+    padding: theme.spacing(4),
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: theme.spacing(2),
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+    marginTop: theme.spacing(4),
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+  },
+  list: {
+    backgroundColor: theme.palette.background.default,
+    borderRadius: theme.spacing(1),
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+  },
+}));
 
 const AdminPanel = () => {
+  const classes = useStyles();
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ name: '', email: '', role: 'user' });
 
@@ -50,42 +72,47 @@ const AdminPanel = () => {
   };
 
   return (
-    <div>
-      <h1>Admin Panel</h1>
-      <div>
-        <input
-          type="text"
-          placeholder="Name"
+    <Container className={classes.adminPanel}>
+      <Typography variant="h4" gutterBottom>
+        Admin Panel
+      </Typography>
+      <div className={classes.form}>
+        <TextField
+          label="Name"
           value={newUser.name}
           onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
         />
-        <input
+        <TextField
+          label="Email"
           type="email"
-          placeholder="Email"
           value={newUser.email}
           onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
         />
-        <select
+        <Select
           value={newUser.role}
           onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
         >
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-        </select>
-        <button onClick={handleAddUser}>Add User</button>
+          <MenuItem value="user">User</MenuItem>
+          <MenuItem value="admin">Admin</MenuItem>
+        </Select>
+        <Button variant="contained" color="primary" onClick={handleAddUser}>
+          Add User
+        </Button>
       </div>
-      <ul>
-        {users.map(user => (
-          <li key={user._id}>
-            {user.name} - {user.role}
-            <button onClick={() => handleModifyUser(user._id, { ...user, role: user.role === 'user' ? 'admin' : 'user' })}>
+      <List className={classes.list}>
+        {users.map((user) => (
+          <ListItem key={user._id}>
+            <ListItemText primary={`${user.name} - ${user.role}`} />
+            <IconButton onClick={() => handleModifyUser(user._id, { ...user, role: user.role === 'user' ? 'admin' : 'user' })}>
               Toggle Role
-            </button>
-            <button onClick={() => handleDeleteUser(user._id)}>Delete</button>
-          </li>
+            </IconButton>
+            <IconButton onClick={() => handleDeleteUser(user._id)}>
+              Delete
+            </IconButton>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Container>
   );
 };
 

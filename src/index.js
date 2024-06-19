@@ -1,17 +1,16 @@
-import './globalStyles.css';
-
-import App from './App';
-import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import store from './redux/store';
+import App from './App';
+import './globalStyles.css';
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
+    <BrowserRouter>
       <App />
-    </Router>
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );

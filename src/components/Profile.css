@@ -1,24 +1,35 @@
-.profile {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.2s, transform 0.2s;
+.profile-page {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin: 32px auto;
+  max-width: 600px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.profile-page .MuiTypography-h4 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.profile-page .profile-slider {
+  color: #e82127;
+}
+
+.profile-page .profile-textfield {
+  margin-right: 16px;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  
-  .profile:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateY(-3px);
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .profile h2 {
-    margin-top: 0;
-    font-size: 20px;
-  }
-  
-  .profile p {
-    margin-bottom: 0;
-    font-size: 16px;
-  }
-  
+}

@@ -1,25 +1,23 @@
-# Dockerfile
+# Use the official Node.js image as the base image
+FROM node:16
 
-# Use an official Node.js runtime as the base image
-FROM node:14
-
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files
+# Copy package.json and package-lock.json files to the working directory
 COPY package*.json ./
 
-# Install dependencies
+# Install the dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# Build the application
-RUN npm run build
+# Set environment variables
+ENV PORT=5000
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 5000
 
-# Define the command to run the application
-CMD ["npm", "start"]
+# Start the application
+CMD ["node", "server.js"]
