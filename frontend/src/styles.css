@@ -1,0 +1,40 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.snackbar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.snackbar.error {
+  background-color: red;
+}
+
+.snackbar.success {
+  background-color: green;
+}
+
+.radiohead {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.radiohead.selected {
+  border-color: blue;
+}
+
+.incoming-audio-indicator {
+  color: red;
+  font-weight: bold;
+  margin-top: 8px;
+}

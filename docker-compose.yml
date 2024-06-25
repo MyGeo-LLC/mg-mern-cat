@@ -8,14 +8,22 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: mydatabase
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   backend:
-    build: .
-    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend-dev
     ports:
       - '5000:5000'
     environment:
       MONGO_URI: 'mongodb://root:example@mongo:27017/mydatabase?authSource=admin'
-      JWT_SECRET: 'your_jwt_secret'
     depends_on:
       - mongo
+
+volumes:
+  mongo-data:

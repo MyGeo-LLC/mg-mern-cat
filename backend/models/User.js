@@ -5,9 +5,13 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: String, enum: ['operator', 'admin', 'superuser', 'test'], default: 'operator' },
+  visual: { type: String, enum: ['on', 'off'], default: 'on' },
+  notifications: { type: String, enum: ['low', 'default', 'high'], default: 'default' },
+  lastLogin: { type: Date }
 });
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) {
     next();
   }
@@ -15,6 +19,8 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-const User = mongoose.model('User', userSchema);
+userSchema.methods.comparePassword = async function(enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
-module.exports = User;
+module.exports = mongoose.model('User', userSchema);

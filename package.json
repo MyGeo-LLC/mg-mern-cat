@@ -1,7 +1,7 @@
 {
   "name": "mern-project",
   "version": "1.0.0",
-  "description": "A MERN stack project.",
+  "description": "MERN VRNET.",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
@@ -32,6 +32,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.3",
     "morgan": "^1.10.0",
+    "notistack": "^3.0.1",
     "process": "^0.11.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -39,9 +40,13 @@
     "react-grid-layout": "^1.4.4",
     "react-redux": "^7.2.9",
     "react-resizable": "^3.0.5",
+    "react-rnd": "^10.4.11",
     "react-router-dom": "^6.23.1",
     "react-scripts": "4.0.3",
-    "redux": "^4.1.0"
+    "redux": "^4.1.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "webrtc-adapter": "^9.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.14.2",
