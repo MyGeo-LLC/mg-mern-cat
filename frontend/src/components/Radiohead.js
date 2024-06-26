@@ -1,6 +1,8 @@
 import './Radiohead.css';
+
 import { Box, IconButton, Slider, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+
 import Settings from '@mui/icons-material/Settings';
 
 const Radiohead = ({ id, name, settings, onUpdateSettings, onSettingsClick, isSelected, bringToFront, audioSource }) => {

@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
+
 import axios from 'axios';
-import { useSnackbar } from './SnackbarContext';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from './SnackbarContext';
 
 const AuthContext = createContext();
 

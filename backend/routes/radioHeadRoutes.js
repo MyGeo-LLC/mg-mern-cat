@@ -1,8 +1,8 @@
 const express = require('express');
-const { getRadioHeads } = require('../controllers/radioHeadController');
-const { protect } = require('../middleware/authMiddleware');
+const { createRadioHead, getRadioHeads } = require('../controllers/radioHeadController'); // Adjust import based on actual controller functions
 const router = express.Router();
 
-router.get('/', protect, getRadioHeads);
+router.post('/create', createRadioHead); // Ensure this function is correctly defined and imported
+router.get('/', getRadioHeads); // Ensure this function is correctly defined and imported
 
 module.exports = router;

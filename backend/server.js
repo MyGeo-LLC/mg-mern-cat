@@ -19,9 +19,11 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.use(cors());
 app.use(express.json());
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/radioheads', radioHeadRoutes);
+app.use('/api/radioheads', radioHeadRoutes); // This is the line that uses your routes
+
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

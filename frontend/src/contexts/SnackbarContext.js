@@ -1,5 +1,5 @@
-import React, { createContext, useContext } from 'react';
 import { SnackbarProvider as NotistackSnackbarProvider, useSnackbar as notistackUseSnackbar } from 'notistack';
+import React, { createContext, useContext } from 'react';
 
 const SnackbarContext = createContext();
 

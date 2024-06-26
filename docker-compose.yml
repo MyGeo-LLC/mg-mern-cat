@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   mongo:
     image: mongo:latest
@@ -15,7 +16,7 @@ services:
 
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: backend-dev
     ports:
@@ -24,6 +25,18 @@ services:
       MONGO_URI: 'mongodb://root:example@mongo:27017/mydatabase?authSource=admin'
     depends_on:
       - mongo
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend-dev
+    ports:
+      - '9000:9000'
+    depends_on:
+      - backend
+    command: npm run dev
 
 volumes:
   mongo-data:

@@ -9,3 +9,4 @@ more.sh
 start.sh
 u.sh
 u1.sh
+*node_modules*

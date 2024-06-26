@@ -1,5 +1,6 @@
 import { Box, Button, Container, Dialog, DialogContent, DialogTitle, Tab, Tabs, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+
 import axios from 'axios';
 import { useSnackbar } from '../contexts/SnackbarContext';
 
@@ -53,7 +54,7 @@ const Admin = () => {
 
   const handleSaveUser = async () => {
     try {
-      await axios.put(, editUser);
+      await axios.put(`/api/users/${editUser._id}`, editUser);
       fetchUsers();
       setEditUser(null);
       setSettingsOpen(false);
@@ -65,7 +66,7 @@ const Admin = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete();
+      await axios.delete(`/api/users/${userId}`);
       fetchUsers();
       showSnackbar('User deleted successfully', 'success');
     } catch (error) {

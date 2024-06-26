@@ -1,16 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import './styles.css';
+
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import { MessagesProvider } from './contexts/MessagesContext';
 import { ProfilePreferencesProvider } from './contexts/ProfilePreferencesContext';
+import { Provider } from 'react-redux';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import ShortcutsProvider from './contexts/ShortcutsContext';
-import { ThemeProvider } from './contexts/ThemeProvider';
 import { SnackbarProvider } from './contexts/SnackbarContext';
+import { ThemeProvider } from './contexts/ThemeProvider';
 import store from './redux/store';
-import './styles.css';
 
 ReactDOM.render(
   <Provider store={store}>

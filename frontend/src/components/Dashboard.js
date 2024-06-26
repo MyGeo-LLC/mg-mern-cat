@@ -1,13 +1,14 @@
-import { Button, Container, Typography, Box } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import { Box, Button, Container, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
+import AudioPlayer from './AudioPlayer';
 import AudioSourceSelector from './AudioSourceSelector';
 import DraggableWidget from './DraggableWidget';
 import Radiohead from './Radiohead';
 import Tray from './Tray';
-import AudioPlayer from './AudioPlayer';
-import { useSnackbar } from '../contexts/SnackbarContext';
-import { useShortcutKeys } from '../contexts/ShortcutKeysContext';
 import axios from 'axios';
+import { useShortcutKeys } from '../contexts/ShortcutsContext';
+import { useSnackbar } from '../contexts/SnackbarContext';
 
 const Dashboard = ({ user }) => {
   const [radioHeads, setRadioHeads] = useState([]);
