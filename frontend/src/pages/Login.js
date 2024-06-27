@@ -1,65 +1,111 @@
-// frontend/src/pages/Login.js
-
-import { Box, Button, CircularProgress, Container, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-import { useAuth } from '../contexts/AuthContext';
+import { Link } from 'react-router-dom';
+import { login } from '../api';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from '../contexts/SnackbarContext';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'var(--background-color)',
+  },
+  paper: {
+    padding: theme.spacing(4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: 'var(--foreground-color)',
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
 const Login = () => {
+  const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
-  const showSnackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
     try {
-      await login(email, password);
+      await login({ email, password });
+      enqueueSnackbar('Login successful!', { variant: 'success' });
     } catch (error) {
-      showSnackbar('Login failed', 'error');
-    } finally {
-      setLoading(false);
+      enqueueSnackbar('Login failed. Please check your credentials and try again.', { variant: 'error' });
     }
   };
 
   return (
-    <Container>
-      <Box sx={{ p: 4, backgroundColor: '#1e1e1e', borderRadius: '8px', mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Login
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            fullWidth
-            sx={{ mt: 2 }}
-            required
-            InputLabelProps={{ style: { color: '#ffffff' } }}
-            InputProps={{ style: { color: '#ffffff' } }}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            fullWidth
-            sx={{ mt: 2 }}
-            required
-            InputLabelProps={{ style: { color: '#ffffff' } }}
-            InputProps={{ style: { color: '#ffffff' } }}
-          />
-          <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-            {loading ? <CircularProgress size={24} /> : 'Login'}
-          </Button>
-        </form>
-      </Box>
-    </Container>
+    <div className={classes.root}>
+      <Container component="main" maxWidth="xs">
+        <Paper className={classes.paper} elevation={6}>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} onSubmit={handleLogin}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <Link to="/forgot-password" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="/register" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </Paper>
+      </Container>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   mongo:
     image: mongo:latest
@@ -8,21 +9,16 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    command: mongod --auth --bind_ip_all
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   backend:
-    build:
-      context: ./backend
+    build: ./backend
+    container_name: backend
     ports:
       - '5000:5000'
     environment:
-      MONGO_URI: mongodb://root:example@mongo:27017/mydatabase
-      PORT: 5000
+      MONGO_URI: mongodb://appuser:apppassword@mongo:27017/mydatabase
       JWT_SECRET: your_jwt_secret
     depends_on:
       - mongo
-    entrypoint: ["sh", "/wait-for", "mongo:27017", "--", "npm", "run", "dev"]
-volumes:
-  mongo-data:

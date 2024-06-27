@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
+
+import useShortcut from '../hooks/useShortcut';
 
 const ShortcutsContext = createContext();
 
@@ -6,15 +8,7 @@ export const useShortcutKeys = () => useContext(ShortcutsContext);
 
 const ShortcutsProvider = ({ children }) => {
   const handleShortcut = (callback) => {
-    useEffect(() => {
-      const handleKeyDown = (event) => {
-        callback(event.key);
-      };
-      window.addEventListener('keydown', handleKeyDown);
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown);
-      };
-    }, [callback]);
+    useShortcut(callback);
   };
 
   return (

@@ -1,48 +1,45 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const bodyParser = require('body-parser');
 const path = require('path');
-
+const corsMiddleware = require('./middleware/corsMiddleware');
+const connectDB = require('./utils/connectDB');
+const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const radioHeadRoutes = require('./routes/radioHeadRoutes');
-const errorHandler = require('./middleware/errorHandler');
+const logger = require('./utils/logger');
 
-dotenv.config();
-
+// Initialize express app
 const app = express();
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 50000, // Increased timeout period
-}).then(() => {
-  console.log('MongoDB connected');
-}).catch((err) => {
-  console.error('MongoDB connection error:', err);
-});
+// Connect to the database
+connectDB();
 
-app.use(cors());
-app.use(express.json());
+// Apply CORS middleware
+app.use(corsMiddleware);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/radioheads', radioHeadRoutes);
+// Middleware for parsing JSON requests
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../frontend/build')));
+app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
-// Handle React routing, return all requests to React app
+// API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/radiohead', radioHeadRoutes);
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
 });
 
-// Error handler middleware
+// Error handling middleware
 app.use(errorHandler);
 
+// Start the server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`Server running on port ${PORT}`);
 });

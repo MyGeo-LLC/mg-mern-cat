@@ -1,4 +1,4 @@
-import './styles.css';
+import './styles/global.css'; // Import global styles
 
 import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import ShortcutsProvider from './contexts/ShortcutsContext';
-import { SnackbarProvider } from './contexts/SnackbarContext';
+import SnackbarProvider from './contexts/SnackbarContext';
 import { ThemeProvider } from './contexts/ThemeProvider';
 import store from './redux/store';
 

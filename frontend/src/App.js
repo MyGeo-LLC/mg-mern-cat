@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import About from './pages/About';
 import Admin from './pages/Admin';
 import Dashboard from './components/Dashboard';
-import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Login from './pages/Login';
@@ -15,7 +14,7 @@ import TermsAndPrivacy from './components/TermsAndPrivacy';
 
 const App = () => {
   return (
-    <ErrorBoundary>
+    <>
       <Header />
       <Routes>
         <Route path="/" element={<SplashScreen />} />
@@ -29,7 +28,7 @@ const App = () => {
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
-    </ErrorBoundary>
+    </>
   );
 };
 

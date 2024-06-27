@@ -1,22 +1,32 @@
-import { SnackbarProvider as NotistackSnackbarProvider, useSnackbar as notistackUseSnackbar } from 'notistack';
-import React, { createContext, useContext } from 'react';
+import { SnackbarProvider as NotistackProvider, useSnackbar as useNotistackSnackbar } from 'notistack';
+import React, { createContext, useContext, useEffect } from 'react';
+
+import { setEnqueueSnackbar } from '../services/notificationService';
 
 const SnackbarContext = createContext();
 
-export const useSnackbar = () => useContext(SnackbarContext);
-
 export const SnackbarProvider = ({ children }) => {
-  const { enqueueSnackbar } = notistackUseSnackbar();
+  const { enqueueSnackbar } = useNotistackSnackbar();
 
-  const showSnackbar = (message, variant) => {
-    enqueueSnackbar(message, { variant });
-  };
+  useEffect(() => {
+    setEnqueueSnackbar(enqueueSnackbar);
+  }, [enqueueSnackbar]);
 
   return (
-    <SnackbarContext.Provider value={showSnackbar}>
-      <NotistackSnackbarProvider maxSnack={3}>
-        {children}
-      </NotistackSnackbarProvider>
+    <SnackbarContext.Provider value={{ enqueueSnackbar }}>
+      {children}
     </SnackbarContext.Provider>
   );
 };
+
+export const useSnackbar = () => {
+  return useContext(SnackbarContext);
+};
+
+const ProviderWrapper = ({ children }) => (
+  <NotistackProvider maxSnack={3}>
+    <SnackbarProvider>{children}</SnackbarProvider>
+  </NotistackProvider>
+);
+
+export default ProviderWrapper;

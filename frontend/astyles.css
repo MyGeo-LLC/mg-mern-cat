@@ -1,0 +1,76 @@
+/* frontend/src/styles.css */
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+input, textarea {
+  background-color: #1e1e1e;
+  border: 1px solid #424242;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #90caf9;
+  color: #1e1e1e;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-transform: none;
+}
+
+button:hover {
+  background-color: #81d4fa;
+}
+
+.header, .footer {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+
+.snackbar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.snackbar.error {
+  background-color: red;
+}
+
+.snackbar.success {
+  background-color: green;
+}
+
+.radiohead {
+  border: 1px solid #424242;
+  padding: 16px;
+  margin: 16px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  color: #ffffff;
+}
+
+.radiohead.selected {
+  border-color: #90caf9;
+}
+
+.incoming-audio-indicator {
+  color: red;
+  font-weight: bold;
+  margin-top: 8px;
+}
