@@ -1,0 +1,5 @@
+nodule_modules
+backend/node_modules/
+frontend/node_modules/
+add
+node_modules

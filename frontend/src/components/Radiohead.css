@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+.radiohead {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.radiohead.selected {
+  border-color: #007bff;
+  background-color: #e9f5ff;
+}
+
+.radiohead:hover {
+  background-color: #f0f8ff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.radiohead h6 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.radiohead .MuiTypography-body2 {
+  color: #555;
+}
+
+.radiohead .MuiBox-root {
+  margin-top: 8px;
+}
+
+.radiohead .MuiSlider-root {
+  color: #007bff;
+}
+
+.radiohead .MuiIconButton-root {
+  color: #007bff;
+  transition: color 0.3s;
+}
+
+.radiohead .MuiIconButton-root:hover {
+  color: #0056b3;
+}
+
+.incoming-audio-indicator {
+  color: red;
+  font-weight: bold;
+  margin-top: 8px;
+}
