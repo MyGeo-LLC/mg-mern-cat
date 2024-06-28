@@ -7,17 +7,19 @@ import DraggableWidget from './DraggableWidget';
 import Radiohead from './Radiohead';
 import Tray from './Tray';
 import axios from 'axios';
-import { useShortcutKeys } from '../contexts/ShortcutsContext';
+import { useAuth } from '../contexts/AuthContext';
+//import { useShortcutKeys } from '../contexts/ShortcutsContext';
 import { useSnackbar } from '../contexts/SnackbarContext';
 
-const Dashboard = ({ user }) => {
+const Dashboard = () => {
+  const { user } = useAuth();
   const [radioHeads, setRadioHeads] = useState([]);
   const [selectedRadioHeads, setSelectedRadioHeads] = useState([]);
   const [minimizedItems, setMinimizedItems] = useState([]);
   const [audioSource, setAudioSource] = useState("");
   const [audioPlayerMinimized, setAudioPlayerMinimized] = useState(true);
-  const showSnackbar = useSnackbar();
-  const { handleShortcut } = useShortcutKeys();
+  const { enqueueSnackbar } = useSnackbar();
+  //const { handleShortcut } = useShortcutKeys();
 
   useEffect(() => {
     const fetchRadioHeads = async () => {
@@ -25,12 +27,12 @@ const Dashboard = ({ user }) => {
         const response = await axios.get('/api/radioheads');
         setRadioHeads(response.data);
       } catch (error) {
-        showSnackbar("Error fetching radio heads", "error");
+        enqueueSnackbar("Error fetching radio heads", { variant: 'error' });
       }
     };
 
     fetchRadioHeads();
-  }, [showSnackbar]);
+  }, [enqueueSnackbar]); // enqueueSnackbar is a dependency here
 
   const handleUpdateSettings = (id, newSettings) => {
     setRadioHeads((prevRadioHeads) =>
@@ -75,7 +77,7 @@ const Dashboard = ({ user }) => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        Welcome {user.name} (Dashboard)
+        Welcome {user?.name} (Dashboard)
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         {radioHeads.map((radioHead) => (

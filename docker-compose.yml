@@ -4,21 +4,25 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongo
-    ports:
-      - '27017:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: "echo 1"
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   backend:
     build: ./backend
     container_name: backend
-    ports:
-      - '5000:5000'
-    environment:
-      MONGO_URI: mongodb://appuser:apppassword@mongo:27017/mydatabase
-      JWT_SECRET: your_jwt_secret
+    env_file:
+      - ./backend/.env
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    command: ["sh", "-c", "./wait-for-it.sh mongo:27017 --timeout=0 -- node scripts/createDefaultUser.js && npm start"]

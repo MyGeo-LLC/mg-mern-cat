@@ -1,17 +1,27 @@
+# Use an official Node.js runtime as a parent image
 FROM node:14
 
+# Set the working directory
 WORKDIR /app
 
+# Copy package.json and package-lock.json
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
+# Copy the rest of the application code
 COPY . .
 
-# Install netcat for wait-for script
-RUN apt-get update && apt-get install -y netcat
+# Copy the .env file
+COPY .env .env
 
-# Copy the wait-for script and make it executable
-COPY wait-for /wait-for
-RUN chmod +x /wait-for
+# Copy wait-for-it.sh
+COPY wait-for-it.sh wait-for-it.sh
+RUN chmod +x wait-for-it.sh
 
-CMD ["sh", "-c", "/wait-for mongo:27017 -- npm run dev"]
+# Expose the application port
+EXPOSE 5000
+
+# Run the script to create a default user and then start the app
+CMD ["sh", "-c", "./wait-for-it.sh mongo:27017 -- node scripts/createDefaultUser.js && npm start"]

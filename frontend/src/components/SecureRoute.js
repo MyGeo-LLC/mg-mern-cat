@@ -3,18 +3,14 @@ import { Navigate, Outlet } from 'react-router-dom';
 import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
-const SecureRoute = ({ requiredRole }) => {
+const SecureRoute = ({ children, ...rest }) => {
   const { user } = useAuth();
 
   if (!user) {
     return <Navigate to="/login" />;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
-    return <Navigate to="/dashboard" />;
-  }
-
-  return <Outlet />;
+  return children ? React.cloneElement(children, rest) : <Outlet />;
 };
 
 export default SecureRoute;

@@ -1,7 +1,10 @@
-export const logPerformance = (metric) => {
-  console.log('Performance metric:', metric);
+const logger = {
+  info: (message, ...args) => {
+    console.log(`INFO: ${message}`, ...args);
+  },
+  error: (message, ...args) => {
+    console.error(`ERROR: ${message}`, ...args);
+  },
 };
 
-export const logError = (error) => {
-  console.error('Error:', error);
-};
+export default logger;

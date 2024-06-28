@@ -1,0 +1,131 @@
+.
+├── README.md
+├── backend
+│   ├── Dockerfile
+│   ├── Dockerfile.prod
+│   ├── combined.log
+│   ├── controllers
+│   │   ├── authController.js
+│   │   ├── radioHeadController.js
+│   │   └── userController.js
+│   ├── development.Dockerfile
+│   ├── error.log
+│   ├── middleware
+│   │   ├── authMiddleware.js
+│   │   ├── corsMiddleware.js
+│   │   ├── errorHandler.js
+│   │   └── validateRequest.js
+│   ├── models
+│   │   ├── RadioHead.js
+│   │   └── User.js
+│   ├── mongo-init.js
+│   ├── mongo.sh
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── routes
+│   │   ├── authRoutes.js
+│   │   ├── radioHeadRoutes.js
+│   │   └── userRoutes.js
+│   ├── scripts
+│   │   └── createDefaultUser.js
+│   ├── server.js
+│   ├── utils
+│   │   ├── connectDB.js
+│   │   ├── generateToken.js
+│   │   └── logger.js
+│   ├── wait-for
+│   └── wait-for-it.sh
+├── cypress.json
+├── cypress.sh
+├── docker-compose.dev.yml
+├── docker-compose.prod.yml
+├── docker-compose.yml
+├── frontend
+│   ├── Dockerfile
+│   ├── Dockerfile.prod
+│   ├── astyles.css
+│   ├── babel.config.json
+│   ├── development.Dockerfile
+│   ├── dist
+│   ├── ngnx.conf
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── manifest.json
+│   │   └── styles.css
+│   ├── src
+│   │   ├── App.js
+│   │   ├── Dockerfile
+│   │   ├── api
+│   │   │   ├── api.js
+│   │   │   ├── axiosInstance.js
+│   │   │   └── index.js
+│   │   ├── components
+│   │   │   ├── AudioPlayer.js
+│   │   │   ├── AudioSourceSelector.js
+│   │   │   ├── Dashboard.js
+│   │   │   ├── DraggableWidget.js
+│   │   │   ├── ErrorBoundary.js
+│   │   │   ├── Footer.js
+│   │   │   ├── Header.js
+│   │   │   ├── Layout.css
+│   │   │   ├── Layout.js
+│   │   │   ├── Profile.js
+│   │   │   ├── Radiohead.css
+│   │   │   ├── Radiohead.js
+│   │   │   ├── SecureRoute.js
+│   │   │   ├── SettingsIcon.js
+│   │   │   ├── SettingsPanel.js
+│   │   │   ├── Spinner.css
+│   │   │   ├── Spinner.js
+│   │   │   ├── SplashScreen.js
+│   │   │   ├── TermsAndPrivacy.js
+│   │   │   └── Tray.js
+│   │   ├── contexts
+│   │   │   ├── AuthContext.js
+│   │   │   ├── CollapseTransition.js
+│   │   │   ├── MessagesContext.js
+│   │   │   ├── ProfilePreferencesContext.js
+│   │   │   ├── ShortcutsContext.js
+│   │   │   ├── SnackbarContext.js
+│   │   │   └── ThemeProvider.js
+│   │   ├── hooks
+│   │   │   └── useShortcut.js
+│   │   ├── index.js
+│   │   ├── pages
+│   │   │   ├── About.js
+│   │   │   ├── Admin.js
+│   │   │   ├── Donate.js
+│   │   │   ├── Login.css
+│   │   │   ├── Login.js
+│   │   │   ├── NotFound.js
+│   │   │   └── TermsAndPrivacy.js
+│   │   ├── redux
+│   │   │   ├── actions
+│   │   │   │   ├── authActions.js
+│   │   │   │   └── types.js
+│   │   │   ├── reducers
+│   │   │   │   ├── authReducer.js
+│   │   │   │   └── index.js
+│   │   │   └── store.js
+│   │   ├── services
+│   │   │   └── notificationService.js
+│   │   ├── styles
+│   │   │   └── global.css
+│   │   ├── styles.css
+│   │   ├── theme.js
+│   │   └── utils
+│   │       ├── logger.js
+│   │       └── settings.js
+│   └── webpack.config.js
+├── mongo-init.js
+├── project_structure
+├── scripts
+│   └── refresh_docker.sh
+├── structure
+├── wait-for
+└── wait-for-it.sh
+
+23 directories, 105 files

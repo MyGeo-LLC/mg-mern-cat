@@ -4,7 +4,9 @@
     "main": "server.js",
     "scripts": {
         "start": "node server.js",
-        "dev": "nodemon server.js"
+        "dev": "nodemon server.js",
+        "create-default-user": "node scripts/createDefaultUser.js"
+
     },
     "dependencies": {
         "bcrypt": "^5.1.1",

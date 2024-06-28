@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const radioHeadRoutes = require('./routes/radioHeadRoutes');
 const logger = require('./utils/logger');
+require('dotenv').config(); // Load environment variables
 
 // Initialize express app
 const app = express();
@@ -24,6 +25,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'frontend', 'build')));
+
+app.use(express.static(path.join(__dirname, 'public'))); // Adjust the path as necessary
+
 
 // API routes
 app.use('/api/auth', authRoutes);

@@ -1,32 +1,27 @@
-import { SnackbarProvider as NotistackProvider, useSnackbar as useNotistackSnackbar } from 'notistack';
-import React, { createContext, useContext, useEffect } from 'react';
-
-import { setEnqueueSnackbar } from '../services/notificationService';
+import { SnackbarProvider as NotistackSnackbarProvider, useSnackbar as useNotistackSnackbar } from 'notistack';
+import React, { createContext, useContext } from 'react';
 
 const SnackbarContext = createContext();
-
-export const SnackbarProvider = ({ children }) => {
-  const { enqueueSnackbar } = useNotistackSnackbar();
-
-  useEffect(() => {
-    setEnqueueSnackbar(enqueueSnackbar);
-  }, [enqueueSnackbar]);
-
-  return (
-    <SnackbarContext.Provider value={{ enqueueSnackbar }}>
-      {children}
-    </SnackbarContext.Provider>
-  );
-};
 
 export const useSnackbar = () => {
   return useContext(SnackbarContext);
 };
 
-const ProviderWrapper = ({ children }) => (
-  <NotistackProvider maxSnack={3}>
-    <SnackbarProvider>{children}</SnackbarProvider>
-  </NotistackProvider>
-);
+export const SnackbarProvider = ({ children }) => {
+  return (
+    <NotistackSnackbarProvider maxSnack={3}>
+      <InnerSnackbarProvider>{children}</InnerSnackbarProvider>
+    </NotistackSnackbarProvider>
+  );
+};
 
-export default ProviderWrapper;
+const InnerSnackbarProvider = ({ children }) => {
+  const notistack = useNotistackSnackbar();
+  console.log("notistack:", notistack); // Debug line to check if notistack is defined
+
+  return (
+    <SnackbarContext.Provider value={notistack}>
+      {children}
+    </SnackbarContext.Provider>
+  );
+};

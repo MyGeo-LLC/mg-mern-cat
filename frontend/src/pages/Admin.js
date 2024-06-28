@@ -1,5 +1,6 @@
 import { Box, Button, Container, Dialog, DialogContent, DialogTitle, Tab, Tabs, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { fetchProfile, fetchRadioHeads, updateProfile } from '../api';
 
 import axios from 'axios';
 import { useSnackbar } from '../contexts/SnackbarContext';
@@ -11,28 +12,28 @@ const Admin = () => {
   const [newUser, setNewUser] = useState({ name: '', email: '', role: 'operator' });
   const [editUser, setEditUser] = useState(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const showSnackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetchUsers();
-    fetchRadioHeads();
-  }, []);
+    fetchRadioHeadsData();
+  }, []); // Empty dependency array means this runs once on mount
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('/api/users');
+      const response = await fetchProfile();
       setUsers(response.data);
     } catch (error) {
-      showSnackbar('Error fetching users', 'error');
+      enqueueSnackbar('Error fetching users', { variant: 'error' });
     }
   };
 
-  const fetchRadioHeads = async () => {
+  const fetchRadioHeadsData = async () => {
     try {
-      const response = await axios.get('/api/radioheads');
+      const response = await fetchRadioHeads();
       setRadioHeads(response.data);
     } catch (error) {
-      showSnackbar('Error fetching radio heads', 'error');
+      enqueueSnackbar('Error fetching radio heads', { variant: 'error' });
     }
   };
 
@@ -41,9 +42,9 @@ const Admin = () => {
       await axios.post('/api/users', newUser);
       fetchUsers();
       setNewUser({ name: '', email: '', role: 'operator' });
-      showSnackbar('User added successfully', 'success');
+      enqueueSnackbar('User added successfully', { variant: 'success' });
     } catch (error) {
-      showSnackbar('Error adding user', 'error');
+      enqueueSnackbar('Error adding user', { variant: 'error' });
     }
   };
 
@@ -54,13 +55,13 @@ const Admin = () => {
 
   const handleSaveUser = async () => {
     try {
-      await axios.put(`/api/users/${editUser._id}`, editUser);
+      await updateProfile(editUser);
       fetchUsers();
       setEditUser(null);
       setSettingsOpen(false);
-      showSnackbar('User updated successfully', 'success');
+      enqueueSnackbar('User updated successfully', { variant: 'success' });
     } catch (error) {
-      showSnackbar('Error updating user', 'error');
+      enqueueSnackbar('Error updating user', { variant: 'error' });
     }
   };
 
@@ -68,9 +69,9 @@ const Admin = () => {
     try {
       await axios.delete(`/api/users/${userId}`);
       fetchUsers();
-      showSnackbar('User deleted successfully', 'success');
+      enqueueSnackbar('User deleted successfully', { variant: 'success' });
     } catch (error) {
-      showSnackbar('Error deleting user', 'error');
+      enqueueSnackbar('Error deleting user', { variant: 'error' });
     }
   };
 
