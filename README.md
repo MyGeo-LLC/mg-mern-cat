@@ -1,6 +1,4 @@
-Here's a more polished version of your text:
 
-```markdown
 **Coming Soon to Your Editor**
 
 **MERN Stack**
