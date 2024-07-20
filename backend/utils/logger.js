@@ -1,27 +1,41 @@
-const { createLogger, format, transports } = require('winston');
+const winston = require('winston');
 
-const logger = createLogger({
+// Define the log format
+const logFormat = winston.format.combine(
+  winston.format.timestamp({
+    format: 'YYYY-MM-DD HH:mm:ss'
+  }),
+  winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+);
+
+// Create the logger
+const logger = winston.createLogger({
   level: 'info',
-  format: format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    format.errors({ stack: true }),
-    format.splat(),
-    format.json()
-  ),
-  defaultMeta: { service: 'user-service' },
+  format: logFormat,
   transports: [
-    new transports.File({ filename: 'error.log', level: 'error' }),
-    new transports.File({ filename: 'combined.log' }),
-  ],
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' })
+  ]
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new transports.Console({
-    format: format.combine(
-      format.colorize(),
-      format.simple()
-    )
-  }));
-}
+// Stream for morgan
+logger.stream = {
+  write: function(message, encoding) {
+    logger.info(message);
+  }
+};
 
-module.exports = logger;
+const logPerformance = (metric) => {
+  logger.info(`Performance metric: ${metric}`);
+};
+
+const logError = (error) => {
+  logger.error(`Error: ${error}`);
+};
+
+module.exports = {
+  logger,
+  logPerformance,
+  logError
+};

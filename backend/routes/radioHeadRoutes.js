@@ -1,8 +1,19 @@
 const express = require('express');
-const { createRadioHead, getRadioHeads } = require('../controllers/radioHeadController'); // Adjust import based on actual controller functions
+const {
+  createRadioHead,
+  getRadioHeads,
+  getRadioHeadById,
+  updateRadioHead,
+  deleteRadioHead,
+} = require('../controllers/radioHeadController');
+const { protect, authorize } = require('../middleware/authMiddleware');
+const { validateRequest, radioHeadValidationRules } = require('../middleware/validateRequest');
 const router = express.Router();
 
-router.post('/create', createRadioHead); // Ensure this function is correctly defined and imported
-router.get('/', getRadioHeads); // Ensure this function is correctly defined and imported
+router.post('/', protect, authorize('admin'), radioHeadValidationRules(), validateRequest(radioHeadValidationRules()), createRadioHead);
+router.get('/', protect, getRadioHeads);
+router.get('/:id', protect, getRadioHeadById);
+router.put('/:id', protect, authorize('admin'), radioHeadValidationRules(), validateRequest(radioHeadValidationRules()), updateRadioHead);
+router.delete('/:id', protect, authorize('admin'), deleteRadioHead);
 
 module.exports = router;
