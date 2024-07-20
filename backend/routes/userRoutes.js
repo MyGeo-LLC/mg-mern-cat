@@ -82,7 +82,7 @@ router.get('/:id', protect, authorize('admin'), getUserById);
  *       400:
  *         description: Bad request
  */
-router.post('/', protect, authorize('admin'), userValidationRules(), validateRequest(userValidationRules()), createUser);
+router.post('/', protect, authorize('admin'), userValidationRules(), validateRequest, createUser);
 
 /**
  * @swagger
@@ -115,7 +115,7 @@ router.post('/', protect, authorize('admin'), userValidationRules(), validateReq
  *       400:
  *         description: Bad request
  */
-router.put('/:id', protect, authorize('admin'), userValidationRules(), validateRequest(userValidationRules()), updateUser);
+router.put('/:id', protect, authorize('admin'), userValidationRules(), validateRequest, updateUser);
 
 /**
  * @swagger

@@ -1,20 +1,6 @@
-const express = require('express');
-const {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-} = require('../controllers/userController');
-const { protect, authorize } = require('../middleware/authMiddleware');
-const router = express.Router();
-
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management
- */
+const asyncHandler = require('express-async-handler');
+const User = require('../models/User');
+const logger = require('../utils/logger');
 
 /**
  * @swagger
@@ -32,7 +18,11 @@ const router = express.Router();
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-router.get('/', protect, authorize('admin'), getUsers);
+const getUsers = asyncHandler(async (req, res) => {
+  const users = await User.find();
+  logger.info('Fetched all users');
+  res.json(users);
+});
 
 /**
  * @swagger
@@ -57,7 +47,16 @@ router.get('/', protect, authorize('admin'), getUsers);
  *       404:
  *         description: User not found
  */
-router.get('/:id', protect, authorize('admin'), getUserById);
+const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    logger.info(`Fetched user by ID: ${req.params.id}`);
+    res.json(user);
+  } else {
+    logger.warn(`User not found by ID: ${req.params.id}`);
+    res.status(404).json({ message: 'User not found' });
+  }
+});
 
 /**
  * @swagger
@@ -81,7 +80,19 @@ router.get('/:id', protect, authorize('admin'), getUserById);
  *       400:
  *         description: Bad request
  */
-router.post('/', protect, authorize('admin'), createUser);
+const createUser = asyncHandler(async (req, res) => {
+  const { name, email, password, role } = req.body;
+  const newUser = new User({ name, email, password, role });
+
+  try {
+    const savedUser = await newUser.save();
+    logger.info(`User created: ${savedUser._id}`);
+    res.status(201).json(savedUser);
+  } catch (error) {
+    logger.error(`Error creating user: ${error.message}`);
+    res.status(400).json({ message: error.message });
+  }
+});
 
 /**
  * @swagger
@@ -108,14 +119,22 @@ router.post('/', protect, authorize('admin'), createUser);
  *         content:
  *           application/json:
  *             schema:
- *              
  *               $ref: '#/components/schemas/User'
  *       404:
  *         description: User not found
  *       400:
  *         description: Bad request
  */
-router.put('/:id', protect, authorize('admin'), updateUser);
+const updateUser = asyncHandler(async (req, res) => {
+  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (updatedUser) {
+    logger.info(`User updated: ${req.params.id}`);
+    res.json(updatedUser);
+  } else {
+    logger.warn(`User not found for update: ${req.params.id}`);
+    res.status(404).json({ message: 'User not found' });
+  }
+});
 
 /**
  * @swagger
@@ -138,6 +157,21 @@ router.put('/:id', protect, authorize('admin'), updateUser);
  *       500:
  *         description: Internal server error
  */
-router.delete('/:id', protect, authorize('admin'), deleteUser);
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+  if (user) {
+    logger.info(`User deleted: ${req.params.id}`);
+    res.json({ message: 'User deleted' });
+  } else {
+    logger.warn(`User not found for deletion: ${req.params.id}`);
+    res.status(404).json({ message: 'User not found' });
+  }
+});
 
-module.exports = router;
+module.exports = {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+};

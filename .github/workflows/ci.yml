@@ -1,0 +1,47 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand('ping')'" --health-interval 10s --health-timeout 5s --health-retries 5
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    
+    # Frontend setup
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm install
+    - name: Run frontend tests
+      working-directory: ./frontend
+      run: npm test -- --coverage
+
+    # Backend setup
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm install
+    - name: Run backend tests
+      working-directory: ./backend
+      run: npm test

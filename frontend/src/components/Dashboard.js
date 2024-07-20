@@ -1,38 +1,44 @@
-import { Box, Button, Container, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-
-import AudioPlayer from './AudioPlayer';
-import AudioSourceSelector from './AudioSourceSelector';
-import DraggableWidget from './DraggableWidget';
-import Radiohead from './Radiohead';
-import Tray from './Tray';
+import { Box, Container, Typography } from '@mui/material';
+import { logPerformance } from '../utils/performanceLogger';
+import AudioPlayer from '../components/AudioPlayer';
+import AudioSourceSelector from '../components/AudioSourceSelector';
+import Radiohead from '../components/Radiohead';
+import Tray from '../components/Tray';
 import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext';
-//import { useShortcutKeys } from '../contexts/ShortcutsContext';
+import { useShortcutKeys } from '../contexts/ShortcutsContext';
 import { useSnackbar } from '../contexts/SnackbarContext';
 
-const Dashboard = () => {
-  const { user } = useAuth();
+const Dashboard = ({ user }) => {
   const [radioHeads, setRadioHeads] = useState([]);
   const [selectedRadioHeads, setSelectedRadioHeads] = useState([]);
   const [minimizedItems, setMinimizedItems] = useState([]);
   const [audioSource, setAudioSource] = useState("");
   const [audioPlayerMinimized, setAudioPlayerMinimized] = useState(true);
-  const { enqueueSnackbar } = useSnackbar();
-  //const { handleShortcut } = useShortcutKeys();
+  const showSnackbar = useSnackbar();
+  const { handleShortcut } = useShortcutKeys();
+
+  useEffect(() => {
+    logPerformance('Dashboard component mounted');
+    return () => {
+      logPerformance('Dashboard component unmounted');
+    };
+  }, []);
 
   useEffect(() => {
     const fetchRadioHeads = async () => {
       try {
         const response = await axios.get('/api/radioheads');
         setRadioHeads(response.data);
+        logPerformance('Fetched radio heads');
       } catch (error) {
-        enqueueSnackbar("Error fetching radio heads", { variant: 'error' });
+        showSnackbar("Error fetching radio heads", "error");
+        logPerformance('Error fetching radio heads');
       }
     };
 
     fetchRadioHeads();
-  }, [enqueueSnackbar]); // enqueueSnackbar is a dependency here
+  }, [showSnackbar]);
 
   const handleUpdateSettings = (id, newSettings) => {
     setRadioHeads((prevRadioHeads) =>
@@ -40,6 +46,7 @@ const Dashboard = () => {
         radioHead.id === id ? { ...radioHead, settings: newSettings } : radioHead
       )
     );
+    logPerformance(`Updated settings for radio head ${id}`);
   };
 
   const handleSettingsClick = (id) => {
@@ -50,34 +57,39 @@ const Dashboard = () => {
         return [...prevSelected, id];
       }
     });
+    logPerformance(`Settings clicked for radio head ${id}`);
   };
 
   const handleSelectAudioSource = (source) => {
     setAudioSource(source);
+    logPerformance(`Audio source selected: ${source}`);
   };
 
   const handleMinimize = (id) => {
     setMinimizedItems((prevItems) => [...prevItems, id]);
     setRadioHeads((prevRadioHeads) => prevRadioHeads.filter((radioHead) => radioHead.id !== id));
+    logPerformance(`Radio head minimized: ${id}`);
   };
 
   const handleRestore = (id) => {
     const restoredItem = minimizedItems.find((itemId) => itemId === id);
     setRadioHeads((prevRadioHeads) => [...prevRadioHeads, restoredItem]);
     setMinimizedItems((prevItems) => prevItems.filter((itemId) => itemId !== id));
+    logPerformance(`Radio head restored: ${id}`);
   };
 
   useEffect(() => {
     // Set default audio source
     if (!audioSource && radioHeads.length > 0) {
       setAudioSource(radioHeads[0].settings.fileName);
+      logPerformance(`Default audio source set: ${radioHeads[0].settings.fileName}`);
     }
   }, [radioHeads, audioSource]);
 
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
-        Welcome {user?.name} (Dashboard)
+        Welcome {user.name} (Dashboard)
       </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
         {radioHeads.map((radioHead) => (

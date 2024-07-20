@@ -1,8 +1,18 @@
+// tests/radioHeadController.test.js
 const request = require('supertest');
 const app = require('../server');
+const { connectDB, closeDB } = require('../config/db');
 const RadioHead = require('../models/RadioHead');
 
-describe('RadioHead Controller', () => {
+beforeAll(async () => {
+  await connectDB();
+});
+
+afterAll(async () => {
+  await closeDB();
+});
+
+describe('RadioHead API', () => {
   it('should create a new radio head', async () => {
     const res = await request(app)
       .post('/api/radioheads')
@@ -14,11 +24,12 @@ describe('RadioHead Controller', () => {
           incomingVolume: 50,
           outgoingVolume: 50,
           masterVolume: 50,
-          color: '#FFFFFF'
-        }
+          color: '#FFFFFF',
+        },
       });
-
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty('name', 'Test RadioHead');
   });
+
+  // More tests...
 });

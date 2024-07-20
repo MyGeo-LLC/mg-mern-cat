@@ -1,12 +1,8 @@
-const { logger, logPerformance, logError } = require('../utils/logger');
+// tests/logger.test.js
+const { logPerformance, logError } = require('../utils/performanceLogger');
+const logger = require('../utils/logger');
 
 describe('Logger Utility', () => {
-  it('should log an info message', () => {
-    logger.info = jest.fn();
-    logger.info('This is an info message');
-    expect(logger.info).toHaveBeenCalledWith('This is an info message');
-  });
-
   it('should log a performance metric', () => {
     logger.info = jest.fn();
     logPerformance('Test Performance Metric');

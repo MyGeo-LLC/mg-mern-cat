@@ -1,4 +1,5 @@
 const { body, validationResult } = require('express-validator');
+const { logPerformance } = require('../utils/performanceLogger');
 
 // Middleware to validate request data
 const validateRequest = (validations) => {
@@ -7,9 +8,11 @@ const validateRequest = (validations) => {
 
     const errors = validationResult(req);
     if (errors.isEmpty()) {
+      logPerformance('Request validation passed');
       return next();
     }
 
+    logPerformance('Request validation failed');
     res.status(400).json({
       errors: errors.array(),
     });

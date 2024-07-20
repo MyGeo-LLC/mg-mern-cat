@@ -1,11 +1,18 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { logPerformance } from '../utils/performanceLogger';
 
 const Header = () => {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    logPerformance('Header component mounted');
+    return () => {
+      logPerformance('Header component unmounted');
+    };
+  }, []);
 
   const handleLogout = () => {
     setOpen(true);
