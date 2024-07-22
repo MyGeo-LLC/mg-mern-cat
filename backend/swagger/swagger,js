@@ -1,0 +1,116 @@
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+/**
+ * Swagger configuration options
+ */
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'MyGeo API',
+      version: '1.0.0',
+      description: 'API Documentation for MyGeo API',
+      contact: {
+        name: 'Support Team',
+        email: 'support@mygeo.com'
+      }
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000',
+        description: 'Local server'
+      },
+      {
+        url: 'https://api.mygeo.com',
+        description: 'Production server'
+      }
+    ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      },
+      responses: {
+        UnauthorizedError: {
+          description: 'Access token is missing or invalid',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string'
+                  }
+                },
+                example: {
+                  message: 'Unauthorized'
+                }
+              }
+            }
+          }
+        },
+        ValidationError: {
+          description: 'Validation errors occurred',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  errors: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        msg: { type: 'string' },
+                        param: { type: 'string' },
+                        location: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        ServerError: {
+          description: 'Internal server error',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string'
+                  }
+                },
+                example: {
+                  message: 'Internal server error'
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    security: [
+      {
+        BearerAuth: []
+      }
+    ]
+  },
+  apis: ['./routes/*.js', './middlewares/*.js', './controllers/*.js'], // Path to the API docs
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
+/**
+ * Apply Swagger middleware
+ * @param {Object} app - Express application
+ */
+module.exports = (app) => {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+};

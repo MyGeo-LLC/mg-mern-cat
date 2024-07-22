@@ -1,95 +1,68 @@
-// Path: backend/routes/radioHeadRoutes.js
 const express = require('express');
-const {
-  createRadioHead,
-  getRadioHeads,
-  getRadioHeadById,
-  updateRadioHead,
-  deleteRadioHead,
-} = require('../controllers/radioHeadController');
-const { protect, authorize } = require('../middleware/authMiddleware');
-const { validateRequest, radioHeadValidationRules } = require('../middleware/validateRequest');
+const { validateRequest, radioHeadValidationRules } = require('../middlewares/validateRequest');
+const { getRadioHeads, createRadioHead, updateRadioHead, deleteRadioHead } = require('../controllers/radioHeadController');
+
 const router = express.Router();
 
 /**
  * @swagger
- * tags:
- *   name: RadioHeads
- *   description: Radio head management
- */
-
-/**
- * @swagger
- * /api/radioheads:
+ * /api/radiohead:
  *   get:
  *     summary: Get all radio heads
  *     tags: [RadioHeads]
  *     responses:
  *       200:
- *         description: List of all radio heads
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/RadioHead'
+ *         description: List of radio heads
+ *       500:
+ *         description: Server error
  */
-router.get('/', protect, authorize('admin', 'operator'), getRadioHeads);
+router.get('/', getRadioHeads);
 
 /**
  * @swagger
- * /api/radioheads/{id}:
- *   get:
- *     summary: Get radio head by ID
- *     tags: [RadioHeads]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The radio head ID
- *     responses:
- *       200:
- *         description: Radio head details
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/RadioHead'
- *       404:
- *         description: Radio head not found
- */
-router.get('/:id', protect, authorize('admin', 'operator'), getRadioHeadById);
-
-/**
- * @swagger
- * /api/radioheads:
+ * /api/radiohead:
  *   post:
- *     summary: Create a new radio head
+ *     summary: Create a radio head
  *     tags: [RadioHeads]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/RadioHead'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               fileName:
+ *                 type: string
+ *               settings:
+ *                 type: object
+ *                 properties:
+ *                   incomingVolume:
+ *                     type: number
+ *                   outgoingVolume:
+ *                     type: number
+ *                   masterVolume:
+ *                     type: number
+ *                   color:
+ *                     type: string
  *     responses:
  *       201:
  *         description: Radio head created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/RadioHead'
  *       400:
- *         description: Bad request
+ *         description: Invalid input
+ *       500:
+ *         description: Server error
  */
-router.post('/', protect, authorize('admin'), validateRequest(radioHeadValidationRules()), createRadioHead);
+router.post('/', validateRequest(radioHeadValidationRules()), createRadioHead);
 
 /**
  * @swagger
- * /api/radioheads/{id}:
+ * /api/radiohead/{id}:
  *   put:
- *     summary: Update radio head by ID
+ *     summary: Update a radio head
  *     tags: [RadioHeads]
  *     parameters:
  *       - in: path
@@ -97,32 +70,46 @@ router.post('/', protect, authorize('admin'), validateRequest(radioHeadValidatio
  *         schema:
  *           type: string
  *         required: true
- *         description: The radio head ID
+ *         description: Radio head ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/RadioHead'
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *               fileName:
+ *                 type: string
+ *               settings:
+ *                 type: object
+ *                 properties:
+ *                   incomingVolume:
+ *                     type: number
+ *                   outgoingVolume:
+ *                     type: number
+ *                   masterVolume:
+ *                     type: number
+ *                   color:
+ *                     type: string
  *     responses:
  *       200:
  *         description: Radio head updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/RadioHead'
  *       404:
  *         description: Radio head not found
- *       400:
- *         description: Bad request
+ *       500:
+ *         description: Server error
  */
-router.put('/:id', protect, authorize('admin'), validateRequest(radioHeadValidationRules()), updateRadioHead);
+router.put('/:id', validateRequest(radioHeadValidationRules()), updateRadioHead);
 
 /**
  * @swagger
- * /api/radioheads/{id}:
+ * /api/radiohead/{id}:
  *   delete:
- *     summary: Delete radio head by ID
+ *     summary: Delete a radio head
  *     tags: [RadioHeads]
  *     parameters:
  *       - in: path
@@ -130,15 +117,15 @@ router.put('/:id', protect, authorize('admin'), validateRequest(radioHeadValidat
  *         schema:
  *           type: string
  *         required: true
- *         description: The radio head ID
+ *         description: Radio head ID
  *     responses:
  *       200:
  *         description: Radio head deleted successfully
  *       404:
  *         description: Radio head not found
  *       500:
- *         description: Internal server error
+ *         description: Server error
  */
-router.delete('/:id', protect, authorize('admin'), deleteRadioHead);
+router.delete('/:id', deleteRadioHead);
 
 module.exports = router;

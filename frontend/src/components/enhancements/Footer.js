@@ -1,15 +1,7 @@
 import { Box, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
-import { logPerformance } from '../utils/performanceLogger';
+import React from 'react';
 
 const Footer = () => {
-  useEffect(() => {
-    logPerformance('Footer component mounted');
-    return () => {
-      logPerformance('Footer component unmounted');
-    };
-  }, []);
-
   return (
     <Box component="footer" sx={{ p: 2, bgcolor: 'background.paper', textAlign: 'center' }}>
       <Typography variant="body2" color="textSecondary">

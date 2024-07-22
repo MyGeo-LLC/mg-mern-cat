@@ -1,18 +1,28 @@
 const request = require('supertest');
 const app = require('../server');
-const User = require('../models/User');
+const { connectDB, closeDB } = require('../utils/connectDB');
+
+beforeAll(async () => {
+  await connectDB();
+});
+
+afterAll(async () => {
+  await closeDB();
+});
 
 describe('User API', () => {
-  // @test   Fetch all users
-  // @requirement   RQ-001: System must allow admin to fetch all users
-  it('should fetch all users', async () => {
+  it('should get all users', async () => {
     const res = await request(app)
       .get('/api/users')
-      .set('Authorization', `Bearer ${adminToken}`);
-
-    expect(res.status).toBe(200);
+      .set('Authorization', `Bearer validAdminToken`);
+    expect(res.statusCode).toEqual(200);
     expect(res.body).toBeInstanceOf(Array);
   });
 
-  // Additional tests with similar traceability comments...
+  it('should not get users with invalid token', async () => {
+    const res = await request(app)
+      .get('/api/users')
+      .set('Authorization', `Bearer invalidToken`);
+    expect(res.statusCode).toEqual(401);
+  });
 });

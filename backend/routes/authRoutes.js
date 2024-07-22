@@ -1,13 +1,14 @@
 const express = require('express');
-const { loginUser } = require('../controllers/authController');
-const { validateRequest, loginValidationRules } = require('../middleware/validateRequest');
 const router = express.Router();
+const { loginUser } = require('../controllers/authController');
+const { userValidationRules } = require('../middlewares/validationRules');
+const validateRequest = require('../middlewares/validateRequest');
 
 /**
  * @swagger
  * tags:
- *   name: Authentication
- *   description: User authentication
+ *   name: Auth
+ *   description: Authentication routes
  */
 
 /**
@@ -15,23 +16,31 @@ const router = express.Router();
  * /api/auth/login:
  *   post:
  *     summary: Login a user
- *     tags: [Authentication]
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UserLogin'
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
- *         description: User logged in successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
+ *         description: Successful login
+ *       400:
+ *         description: Invalid input
  *       401:
- *         description: Invalid email or password
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
  */
-router.post('/login', loginValidationRules(), validateRequest, loginUser);
+router.post('/login', userValidationRules(), validateRequest, loginUser);
 
 module.exports = router;

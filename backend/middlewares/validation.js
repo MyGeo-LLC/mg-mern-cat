@@ -1,22 +1,11 @@
-const { body, validationResult } = require('express-validator');
-const { logPerformance } = require('../utils/performanceLogger');
+const { body } = require('express-validator');
 
-// Middleware to validate request data
-const validateRequest = (validations) => {
-  return async (req, res, next) => {
-    await Promise.all(validations.map(validation => validation.run(req)));
-
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-      logPerformance('Request validation passed');
-      return next();
-    }
-
-    logPerformance('Request validation failed');
-    res.status(400).json({
-      errors: errors.array(),
-    });
-  };
+// Validation rules for login
+const loginValidationRules = () => {
+  return [
+    body('email').isEmail().withMessage('Email is invalid'),
+    body('password').notEmpty().withMessage('Password is required'),
+  ];
 };
 
 // Validation rules for creating/updating a user
@@ -56,7 +45,7 @@ const radioHeadValidationRules = () => {
 };
 
 module.exports = {
-  validateRequest,
+  loginValidationRules,
   userValidationRules,
   radioHeadValidationRules,
 };

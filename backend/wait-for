@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # The MIT License (MIT)
-#
-# Copyright (c) 2017 Eficode Oy
+# 
+# (C) 2017 Eficode Oy
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,16 +24,19 @@
 
 VERSION="2.2.3"
 
-set -- "$@" -- "$TIMEOUT" "$QUIET" "$PROTOCOL" "$HOST" "$PORT" "$result"
+# Default parameters
 TIMEOUT=15
 QUIET=0
-# The protocol to make the request with, either "tcp" or "http"
 PROTOCOL="tcp"
 
+# Logging function to stderr
 echoerr() {
-  if [ "$QUIET" -ne 1 ]; then printf "%s\n" "$*" 1>&2; fi
+  if [ "$QUIET" -ne 1 ]; then
+    printf "%s\n" "$*" 1>&2
+  fi
 }
 
+# Usage function to display help
 usage() {
   exitcode="$1"
   cat << USAGE >&2
@@ -47,6 +50,7 @@ USAGE
   exit "$exitcode"
 }
 
+# Wait for a service to be available
 wait_for() {
   case "$PROTOCOL" in
     tcp)
@@ -81,8 +85,8 @@ wait_for() {
 
     result=$?
         
-    if [ $result -eq 0 ] ; then
-      if [ $# -gt 7 ] ; then
+    if [ $result -eq 0 ]; then
+      if [ $# -gt 7 ]; then
         for result in $(seq $(($# - 7))); do
           result=$1
           shift
@@ -96,7 +100,7 @@ wait_for() {
       exit 0
     fi
 
-    if [ $TIMEOUT -ne 0 -a $(date +%s) -ge $TIMEOUT_END ]; then
+    if [ $TIMEOUT -ne 0 ] && [ $(date +%s) -ge $TIMEOUT_END ]; then
       echo "Operation timed out" >&2
       exit 1
     fi
@@ -105,87 +109,91 @@ wait_for() {
   done
 }
 
+# Parse command-line arguments
 while :; do
   case "$1" in
     http://*|https://*)
-    HOST="$1"
-    PROTOCOL="http"
-    shift 1
-    ;;
-    *:* )
-    HOST=$(printf "%s\n" "$1"| cut -d : -f 1)
-    PORT=$(printf "%s\n" "$1"| cut -d : -f 2)
-    shift 1
-    ;;
+      HOST="$1"
+      PROTOCOL="http"
+      shift 1
+      ;;
+    *:*)
+      HOST=$(printf "%s\n" "$1" | cut -d : -f 1)
+      PORT=$(printf "%s\n" "$1" | cut -d : -f 2)
+      shift 1
+      ;;
     -v | --version)
-    echo $VERSION
-    exit
-    ;;
+      echo $VERSION
+      exit
+      ;;
     -q | --quiet)
-    QUIET=1
-    shift 1
-    ;;
+      QUIET=1
+      shift 1
+      ;;
     -q-*)
-    QUIET=0
-    echoerr "Unknown option: $1"
-    usage 1
-    ;;
+      QUIET=0
+      echoerr "Unknown option: $1"
+      usage 1
+      ;;
     -q*)
-    QUIET=1
-    result=$1
-    shift 1
-    set -- -"${result#-q}" "$@"
-    ;;
+      QUIET=1
+      result=$1
+      shift 1
+      set -- -"${result#-q}" "$@"
+      ;;
     -t | --timeout)
-    TIMEOUT="$2"
-    shift 2
-    ;;
+      TIMEOUT="$2"
+      shift 2
+      ;;
     -t*)
-    TIMEOUT="${1#-t}"
-    shift 1
-    ;;
+      TIMEOUT="${1#-t}"
+      shift 1
+      ;;
     --timeout=*)
-    TIMEOUT="${1#*=}"
-    shift 1
-    ;;
+      TIMEOUT="${1#*=}"
+      shift 1
+      ;;
     --)
-    shift
-    break
-    ;;
+      shift
+      break
+      ;;
     --help)
-    usage 0
-    ;;
+      usage 0
+      ;;
     -*)
-    QUIET=0
-    echoerr "Unknown option: $1"
-    usage 1
-    ;;
+      QUIET=0
+      echoerr "Unknown option: $1"
+      usage 1
+      ;;
     *)
-    QUIET=0
-    echoerr "Unknown argument: $1"
-    usage 1
-    ;;
+      QUIET=0
+      echoerr "Unknown argument: $1"
+      usage 1
+      ;;
   esac
 done
 
+# Validate timeout value
 if ! [ "$TIMEOUT" -ge 0 ] 2>/dev/null; then
   echoerr "Error: invalid timeout '$TIMEOUT'"
   usage 3
 fi
 
+# Validate protocol and host/port
 case "$PROTOCOL" in
   tcp)
-    if [ "$HOST" = "" ] || [ "$PORT" = "" ]; then
+    if [ -z "$HOST" ] || [ -z "$PORT" ]; then
       echoerr "Error: you need to provide a host and port to test."
       usage 2
     fi
-  ;;
+    ;;
   http)
-    if [ "$HOST" = "" ]; then
+    if [ -z "$HOST" ]; then
       echoerr "Error: you need to provide a host to test."
       usage 2
     fi
-  ;;
+    ;;
 esac
 
+# Start waiting for the service
 wait_for "$@"

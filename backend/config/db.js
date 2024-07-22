@@ -1,25 +1,43 @@
 const mongoose = require('mongoose');
+const { logger } = require('./logger');
+
+/**
+ * @description Connect to MongoDB
+ * @method connectDB
+ * @returns {Promise<void>}
+ */
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    const start = performance.now();
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('MongoDB connected');
+    const end = performance.now();
+    logger.info(`MongoDB Connected: ${conn.connection.host} - Time: ${(end - start).toFixed(2)}ms`);
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
+    logger.error(`Error connecting to MongoDB: ${error.message}`, { stack: error.stack });
     process.exit(1);
   }
 };
 
+/**
+ * @description Close the MongoDB connection
+ * @method closeDB
+ * @returns {Promise<void>}
+ */
 const closeDB = async () => {
   try {
+    const start = performance.now();
     await mongoose.connection.close();
-    console.log('MongoDB connection closed');
+    const end = performance.now();
+    logger.info(`MongoDB connection closed - Time: ${(end - start).toFixed(2)}ms`);
   } catch (error) {
-    console.error('Error closing MongoDB connection:', error);
+    logger.error(`Error closing MongoDB connection: ${error.message}`, { stack: error.stack });
   }
 };
 
-module.exports = { connectDB, closeDB };
-
+module.exports = {
+  connectDB,
+  closeDB,
+};

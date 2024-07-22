@@ -4,3 +4,7 @@ frontend/node_modules/
 add
 node_modules
 frontend/public/
+logs
+cat.sh
+gather_files.sh
+project_sources.txt

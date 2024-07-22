@@ -1,67 +1,60 @@
-const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const generateToken = require('../utils/generateToken');
+const bcrypt = require('bcryptjs');
+const { logPerformance } = require('../utils/performanceLogger');
 const logger = require('../utils/logger');
 
 /**
  * @swagger
- * /api/auth/login:
- *   post:
- *     summary: Auth user & get token
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: User authenticated
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 name:
- *                   type: string
- *                 email:
- *                   type: string
- *                 token:
- *                   type: string
- *       401:
- *         description: Invalid email or password
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the user
+ *         email:
+ *           type: string
+ *           description: User email
+ *         password:
+ *           type: string
+ *           description: User password
+ *         name:
+ *           type: string
+ *           description: User name
  */
 
-const loginUser = asyncHandler(async (req, res) => {
+/**
+ * Login user
+ * @param {Object} req - Request object
+ * @param {Object} res - Response object
+ * @param {Function} next - Next middleware function
+ */
+const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
-  logger.info(`Login attempt for email: ${email}`);
 
-  const user = await User.findOne({ email });
+  try {
+    const user = await User.findOne({ email });
 
-  if (user && (await user.matchPassword(password))) {
-    logger.info(`Login successful for user: ${user._id}`);
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id),
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '30d',
     });
-  } else {
-    logger.warn(`Login failed for email: ${email}`);
-    res.status(401).json({ message: 'Invalid email or password' });
+
+    logger.info('User logged in', { traceID: req.headers['x-trace-id'] || 'N/A' });
+    res.json({ token });
+  } catch (error) {
+    logger.error('Login failed', { error: error.message, traceID: req.headers['x-trace-id'] || 'N/A' });
+    next(error);
   }
-});
+};
 
 module.exports = {
   loginUser,

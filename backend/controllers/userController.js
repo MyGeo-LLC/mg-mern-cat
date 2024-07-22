@@ -1,6 +1,16 @@
-const asyncHandler = require('express-async-handler');
-const User = require('../models/User');
-const logger = require('../utils/logger');
+const express = require('express');
+const { validateRequest, userValidationRules } = require('../middlewares/validateRequest');
+const { getAllUsers, getUserById, createUser, updateUser, deleteUser } = require('../controllers/userController');
+const { authenticate, authorize } = require('../middlewares/authMiddleware');
+
+const router = express.Router();
+
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management
+ */
 
 /**
  * @swagger
@@ -18,25 +28,21 @@ const logger = require('../utils/logger');
  *               items:
  *                 $ref: '#/components/schemas/User'
  */
-const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find();
-  logger.info('Fetched all users');
-  res.json(users);
-});
+router.get('/', authenticate, authorize('admin'), getAllUsers);
 
 /**
  * @swagger
  * /api/users/{id}:
  *   get:
- *     summary: Get user by ID
+ *     summary: Get a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: The user ID
+ *         description: User ID
  *     responses:
  *       200:
  *         description: User details
@@ -47,16 +53,7 @@ const getUsers = asyncHandler(async (req, res) => {
  *       404:
  *         description: User not found
  */
-const getUserById = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-  if (user) {
-    logger.info(`Fetched user by ID: ${req.params.id}`);
-    res.json(user);
-  } else {
-    logger.warn(`User not found by ID: ${req.params.id}`);
-    res.status(404).json({ message: 'User not found' });
-  }
-});
+router.get('/:id', authenticate, authorize('admin'), getUserById);
 
 /**
  * @swagger
@@ -72,41 +69,29 @@ const getUserById = asyncHandler(async (req, res) => {
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User created
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
  *       400:
- *         description: Bad request
+ *         description: Validation error
  */
-const createUser = asyncHandler(async (req, res) => {
-  const { name, email, password, role } = req.body;
-  const newUser = new User({ name, email, password, role });
-
-  try {
-    const savedUser = await newUser.save();
-    logger.info(`User created: ${savedUser._id}`);
-    res.status(201).json(savedUser);
-  } catch (error) {
-    logger.error(`Error creating user: ${error.message}`);
-    res.status(400).json({ message: error.message });
-  }
-});
+router.post('/', authenticate, authorize('admin'), userValidationRules(), validateRequest, createUser);
 
 /**
  * @swagger
  * /api/users/{id}:
  *   put:
- *     summary: Update user by ID
+ *     summary: Update a user
  *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: The user ID
+ *         description: User ID
  *     requestBody:
  *       required: true
  *       content:
@@ -115,63 +100,37 @@ const createUser = asyncHandler(async (req, res) => {
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: User updated successfully
+ *         description: User updated
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Validation error
  *       404:
  *         description: User not found
- *       400:
- *         description: Bad request
  */
-const updateUser = asyncHandler(async (req, res) => {
-  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  if (updatedUser) {
-    logger.info(`User updated: ${req.params.id}`);
-    res.json(updatedUser);
-  } else {
-    logger.warn(`User not found for update: ${req.params.id}`);
-    res.status(404).json({ message: 'User not found' });
-  }
-});
+router.put('/:id', authenticate, authorize('admin'), userValidationRules(), validateRequest, updateUser);
 
 /**
  * @swagger
  * /api/users/{id}:
  *   delete:
- *     summary: Delete user by ID
+ *     summary: Delete a user
  *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
- *         description: The user ID
+ *         description: User ID
  *     responses:
  *       200:
- *         description: User deleted successfully
+ *         description: User deleted
  *       404:
  *         description: User not found
- *       500:
- *         description: Internal server error
  */
-const deleteUser = asyncHandler(async (req, res) => {
-  const user = await User.findByIdAndDelete(req.params.id);
-  if (user) {
-    logger.info(`User deleted: ${req.params.id}`);
-    res.json({ message: 'User deleted' });
-  } else {
-    logger.warn(`User not found for deletion: ${req.params.id}`);
-    res.status(404).json({ message: 'User not found' });
-  }
-});
+router.delete('/:id', authenticate, authorize('admin'), deleteUser);
 
-module.exports = {
-  getUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-};
+module.exports = router;

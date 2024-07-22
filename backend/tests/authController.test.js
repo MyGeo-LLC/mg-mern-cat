@@ -1,7 +1,6 @@
-// tests/authController.test.js
 const request = require('supertest');
 const app = require('../server');
-const { connectDB, closeDB } = require('../config/db');
+const { connectDB, closeDB } = require('../utils/connectDB');
 
 beforeAll(async () => {
   await connectDB();

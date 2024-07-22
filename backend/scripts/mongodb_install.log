@@ -1,0 +1,279 @@
+[2024-07-21 21:44:17] Updating package list...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 https://dl.google.com/linux/chrome/deb stable InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 https://cli.github.com/packages stable InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:6 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:7 https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy InRelease
+Reading package lists...
+Building dependency tree...
+Reading state information...
+All packages are up to date.
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+[2024-07-21 21:44:17] [0;32mPackage list updated successfully.[0m
+[2024-07-21 21:44:17] Importing MongoDB GPG key...
+Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+OK
+[2024-07-21 21:44:17] [0;32mMongoDB GPG key imported successfully.[0m
+[2024-07-21 21:44:17] [0;32mGPG key validated successfully.[0m
+[2024-07-21 21:44:17] Creating MongoDB list file...
+deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse
+[2024-07-21 21:44:17] [0;32mMongoDB list file created successfully.[0m
+[2024-07-21 21:44:17] Reloading package database...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 https://cli.github.com/packages stable InRelease
+Hit:2 https://dl.google.com/linux/chrome/deb stable InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:7 https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy InRelease
+Ign:8 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 InRelease
+Get:9 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 Release [3094 B]
+Get:10 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 Release.gpg [866 B]
+Get:11 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse arm64 Packages [74.3 kB]
+Get:12 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 Packages [84.0 kB]
+Fetched 162 kB in 2s (94.4 kB/s)
+Reading package lists...
+Building dependency tree...
+Reading state information...
+All packages are up to date.
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: https://repo.mongodb.org/apt/ubuntu/dists/focal/mongodb-org/4.4/Release.gpg: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+[2024-07-21 21:44:17] [0;32mPackage database reloaded successfully.[0m
+[2024-07-21 21:44:17] Installing MongoDB packages...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Some packages could not be installed. This may mean that you have
+requested an impossible situation or if you are using the unstable
+distribution that some required packages have not yet been created
+or been moved out of Incoming.
+The following information may help to resolve the situation:
+
+The following packages have unmet dependencies:
+ mongodb-org-mongos : Depends: libssl1.1 (>= 1.1.0) but it is not installable
+ mongodb-org-server : Depends: libssl1.1 (>= 1.1.0) but it is not installable
+ mongodb-org-shell : Depends: libssl1.1 (>= 1.1.0) but it is not installable
+E: Unable to correct problems, you have held broken packages.
+[2024-07-21 21:44:17] [0;31mFailed to install MongoDB packages.[0m
+[2024-07-21 21:55:59] Updating package list...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 https://dl.google.com/linux/chrome/deb stable InRelease
+Hit:2 https://cli.github.com/packages stable InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:7 https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy InRelease
+Ign:8 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 InRelease
+Hit:9 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 Release
+Reading package lists...
+Building dependency tree...
+Reading state information...
+All packages are up to date.
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: https://repo.mongodb.org/apt/ubuntu/dists/focal/mongodb-org/4.4/Release.gpg: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+[2024-07-21 21:55:59] [0;32mPackage list updated successfully.[0m
+[2024-07-21 21:55:59] Importing MongoDB GPG key...
+Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8)).
+OK
+[2024-07-21 21:55:59] [0;32mMongoDB GPG key imported successfully.[0m
+[2024-07-21 21:55:59] [0;32mGPG key validated successfully.[0m
+[2024-07-21 21:55:59] Creating MongoDB list file...
+deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse
+[2024-07-21 21:55:59] [0;32mMongoDB list file created successfully.[0m
+[2024-07-21 21:55:59] Reloading package database...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 https://cli.github.com/packages stable InRelease
+Hit:5 https://dl.google.com/linux/chrome/deb stable InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Ign:7 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 InRelease
+Hit:8 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 Release
+Hit:9 https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy InRelease
+Reading package lists...
+Building dependency tree...
+Reading state information...
+All packages are up to date.
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: https://repo.mongodb.org/apt/ubuntu/dists/focal/mongodb-org/4.4/Release.gpg: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+W: Target Packages (main/binary-amd64/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Packages (main/binary-all/Packages) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target Translations (main/i18n/Translation-en) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-amd64) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+W: Target CNF (main/cnf/Commands-all) is configured multiple times in /etc/apt/sources.list.d/google-chrome.list:3 and /etc/apt/sources.list.d/google-chrome.list:4
+[2024-07-21 21:55:59] [0;32mPackage database reloaded successfully.[0m
+[2024-07-21 21:55:59] Downloading and installing libssl1.1...
+--2024-07-21 21:56:07--  http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2_amd64.deb
+Resolving archive.ubuntu.com (archive.ubuntu.com)... 91.189.91.83, 91.189.91.81, 185.125.190.81, ...
+Connecting to archive.ubuntu.com (archive.ubuntu.com)|91.189.91.83|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1318204 (1.3M) [application/vnd.debian.binary-package]
+Saving to: ‘libssl1.1.deb’
+
+     0K .......... .......... .......... .......... ..........  3%  471K 3s
+    50K .......... .......... .......... .......... ..........  7% 1.09M 2s
+   100K .......... .......... .......... .......... .......... 11% 1.79M 1s
+   150K .......... .......... .......... .......... .......... 15% 2.53M 1s
+   200K .......... .......... .......... .......... .......... 19% 3.51M 1s
+   250K .......... .......... .......... .......... .......... 23% 5.55M 1s
+   300K .......... .......... .......... .......... .......... 27% 3.53M 1s
+   350K .......... .......... .......... .......... .......... 31% 6.72M 1s
+   400K .......... .......... .......... .......... .......... 34% 8.58M 0s
+   450K .......... .......... .......... .......... .......... 38% 7.76M 0s
+   500K .......... .......... .......... .......... .......... 42% 5.84M 0s
+   550K .......... .......... .......... .......... .......... 46% 5.21M 0s
+   600K .......... .......... .......... .......... .......... 50% 10.4M 0s
+   650K .......... .......... .......... .......... .......... 54% 12.6M 0s
+   700K .......... .......... .......... .......... .......... 58% 13.1M 0s
+   750K .......... .......... .......... .......... .......... 62% 18.2M 0s
+   800K .......... .......... .......... .......... .......... 66% 7.82M 0s
+   850K .......... .......... .......... .......... .......... 69% 24.9M 0s
+   900K .......... .......... .......... .......... .......... 73% 14.2M 0s
+   950K .......... .......... .......... .......... .......... 77% 20.5M 0s
+  1000K .......... .......... .......... .......... .......... 81% 25.5M 0s
+  1050K .......... .......... .......... .......... .......... 85% 16.3M 0s
+  1100K .......... .......... .......... .......... .......... 89% 9.88M 0s
+  1150K .......... .......... .......... .......... .......... 93% 24.1M 0s
+  1200K .......... .......... .......... .......... .......... 97% 16.0M 0s
+  1250K .......... .......... .......... .......              100% 14.4M=0.3s
+
+2024-07-21 21:56:07 (3.96 MB/s) - ‘libssl1.1.deb’ saved [1318204/1318204]
+
+Selecting previously unselected package libssl1.1:amd64.
+(Reading database ... 58910 files and directories currently installed.)
+Preparing to unpack libssl1.1.deb ...
+Unpacking libssl1.1:amd64 (1.1.1f-1ubuntu2) ...
+Setting up libssl1.1:amd64 (1.1.1f-1ubuntu2) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.8) ...
+[2024-07-21 21:55:59] [0;32mlibssl1.1 installed successfully.[0m
+[2024-07-21 21:55:59] Installing MongoDB packages...
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  mongodb-database-tools mongodb-org-database-tools-extra mongodb-org-mongos
+  mongodb-org-server mongodb-org-shell mongodb-org-tools
+The following NEW packages will be installed:
+  mongodb-database-tools mongodb-org mongodb-org-database-tools-extra
+  mongodb-org-mongos mongodb-org-server mongodb-org-shell mongodb-org-tools
+0 upgraded, 7 newly installed, 0 to remove and 0 not upgraded.
+Need to get 103 MB of archives.
+After this operation, 203 MB of additional disk space will be used.
+Get:1 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 mongodb-database-tools amd64 100.9.5 [53.1 MB]
+Get:2 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 mongodb-org-shell amd64 4.4.29 [13.4 MB]
+Get:3 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 mongodb-org-server amd64 4.4.29 [20.8 MB]
+Get:4 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 mongodb-org-mongos amd64 4.4.29 [16.1 MB]
+Get:5 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 mongodb-org-database-tools-extra amd64 4.4.29 [7756 B]
+Get:6 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 mongodb-org-tools amd64 4.4.29 [2896 B]
+Get:7 https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4/multiverse amd64 mongodb-org amd64 4.4.29 [3524 B]
+Fetched 103 MB in 3s (30.3 MB/s)
+Selecting previously unselected package mongodb-database-tools.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 58920 files and directories currently installed.)
+Preparing to unpack .../0-mongodb-database-tools_100.9.5_amd64.deb ...
+Unpacking mongodb-database-tools (100.9.5) ...
+Selecting previously unselected package mongodb-org-shell.
+Preparing to unpack .../1-mongodb-org-shell_4.4.29_amd64.deb ...
+Unpacking mongodb-org-shell (4.4.29) ...
+Selecting previously unselected package mongodb-org-server.
+Preparing to unpack .../2-mongodb-org-server_4.4.29_amd64.deb ...
+Unpacking mongodb-org-server (4.4.29) ...
+Selecting previously unselected package mongodb-org-mongos.
+Preparing to unpack .../3-mongodb-org-mongos_4.4.29_amd64.deb ...
+Unpacking mongodb-org-mongos (4.4.29) ...
+Selecting previously unselected package mongodb-org-database-tools-extra.
+Preparing to unpack .../4-mongodb-org-database-tools-extra_4.4.29_amd64.deb ...
+Unpacking mongodb-org-database-tools-extra (4.4.29) ...
+Selecting previously unselected package mongodb-org-tools.
+Preparing to unpack .../5-mongodb-org-tools_4.4.29_amd64.deb ...
+Unpacking mongodb-org-tools (4.4.29) ...
+Selecting previously unselected package mongodb-org.
+Preparing to unpack .../6-mongodb-org_4.4.29_amd64.deb ...
+Unpacking mongodb-org (4.4.29) ...
+Setting up mongodb-org-server (4.4.29) ...
+Adding system user `mongodb' (UID 109) ...
+Adding new user `mongodb' (UID 109) with group `nogroup' ...
+Not creating home directory `/home/mongodb'.
+Adding group `mongodb' (GID 117) ...
+Done.
+Adding user `mongodb' to group `mongodb' ...
+Adding user mongodb to group mongodb
+Done.
+Setting up mongodb-org-shell (4.4.29) ...
+Setting up mongodb-database-tools (100.9.5) ...
+Setting up mongodb-org-mongos (4.4.29) ...
+Setting up mongodb-org-database-tools-extra (4.4.29) ...
+Setting up mongodb-org-tools (4.4.29) ...
+Setting up mongodb-org (4.4.29) ...
+Processing triggers for man-db (2.10.2-1) ...
+[2024-07-21 21:55:59] [0;32mMongoDB packages installed successfully.[0m
+[2024-07-21 21:55:59] Starting MongoDB service...
+[2024-07-21 21:55:59] [0;32mMongoDB service started successfully.[0m
+[2024-07-21 21:55:59] Enabling MongoDB to start on boot...
+Created symlink /etc/systemd/system/multi-user.target.wants/mongod.service → /lib/systemd/system/mongod.service.
+[2024-07-21 21:55:59] [0;32mMongoDB enabled to start on boot successfully.[0m
+[2024-07-21 21:55:59] Verifying MongoDB service status...
+● mongod.service - MongoDB Database Server
+     Loaded: loaded (/lib/systemd/system/mongod.service; enabled; vendor preset: enabled)
+     Active: active (running) since Sun 2024-07-21 21:56:30 EDT; 201ms ago
+       Docs: https://docs.mongodb.org/manual
+   Main PID: 384489 (mongod)
+     Memory: 17.0M
+     CGroup: /system.slice/mongod.service
+             └─384489 /usr/bin/mongod --config /etc/mongod.conf
+
+Jul 21 21:56:30 DESKTOP-CJRPJ35 systemd[1]: Started MongoDB Database Server.
+Jul 21 21:56:30 DESKTOP-CJRPJ35 mongod[384489]: {"t":{"$date":"2024-07-22T01:56:30.489Z"},"s":"I",  "c":"CONTROL",  "id":7484500, "ctx":"main","msg":"Environment variable MONGODB_CONFIG_OVERRIDE_NOFORK == 1, overriding \"processManagement.fork\" to false"}
+[2024-07-21 21:55:59] [0;32mMongoDB service is running successfully.[0m
+[2024-07-21 21:55:59] [0;32mMongoDB installation and setup complete.[0m
+[2024-07-21 21:55:59] [0;32mYou can access the MongoDB shell by running: mongo[0m

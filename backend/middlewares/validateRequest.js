@@ -1,3 +1,5 @@
+// middlewares/validateRequest.js
+
 const { validationResult } = require('express-validator');
 const { logPerformance } = require('../utils/performanceLogger');
 
