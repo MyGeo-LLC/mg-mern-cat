@@ -25,4 +25,3 @@ describe('Auth API', () => {
       .send({ email: 'invalid@test.com', password: 'invalidpassword' });
     expect(res.statusCode).toEqual(401);
   });
-});

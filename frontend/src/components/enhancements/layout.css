@@ -1,0 +1,38 @@
+/* frontend/src/components/enhancements/layout.css */
+
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .header, .footer {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f9f9f9;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #333;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

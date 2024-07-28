@@ -49,7 +49,7 @@ describe('Auth Middleware', () => {
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
       const next = jest.fn();
 
-      admin(req, res, next);
+      admin(req, res, next);a
       expect(res.status).toHaveBeenCalledWith(403);
       expect(res.json).toHaveBeenCalledWith({ message: 'Not authorized as an admin' });
     });
